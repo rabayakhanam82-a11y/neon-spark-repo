@@ -104,113 +104,36 @@ const GROUPS: Group[] = [
   },
 ];
 
-type RailItem = {
-  title: string;
-  meta: string;
-  glyph: string;
-  accent: "cyan" | "pink" | "acid" | "orange";
-  href?: string;
-  art?: string;
-  soon?: boolean;
-};
-
-type Rail = {
-  key: string;
-  label: string;
-  note: string;
-  tone: "cyan" | "pink" | "acid";
-  reverse?: boolean;
-  speed: number;
-  items: RailItem[];
-};
-
-const RAILS: Rail[] = [
+const FEATURED = [
   {
-    key: "latest",
-    label: "Latest drops",
-    note: "freshly pushed to the archive",
-    tone: "cyan",
-    speed: 42,
-    items: [
-      { title: "Quran Explorer", meta: "Applet", glyph: "✦", accent: "cyan", href: "Quran Explorer.html" },
-      { title: "Qatar Prayers", meta: "Applet", glyph: "◍", accent: "acid", href: "Qatar Prayers.html" },
-      { title: "Reaction Test", meta: "Game", glyph: "⚡", accent: "pink", href: "reactin inf.html", art: featureReaction },
-      { title: "Simon", meta: "Game", glyph: "◉", accent: "orange", href: "simon_fruit.html" },
-      { title: "BN Dictionary", meta: "Applet", glyph: "⌘", accent: "cyan", href: "app.html" },
-      { title: "Weather v1.1", meta: "Applet", glyph: "☁", accent: "acid", href: "Weather v1.1.html" },
-      { title: "Word Scramble", meta: "Guessing", glyph: "⁙", accent: "pink", href: "June Chalenge and Extras/word scramble By A.K..html" },
-    ],
+    status: "01 / popular now",
+    title: "Neon Rush",
+    copy: "The main event. A fast, bright arcade run through a tunnel of light.",
+    cta: "Launch game",
+    href: "Car Game.html",
+    art: featureRace,
   },
   {
-    key: "popular",
-    label: "Most popular",
-    note: "the ones everyone opens first",
-    tone: "pink",
-    reverse: true,
-    speed: 52,
-    items: [
-      { title: "Car Game", meta: "Game · #1", glyph: "◈", accent: "pink", href: "Car Game.html", art: featureRace },
-      { title: "Tetris", meta: "Game · #2", glyph: "▤", accent: "cyan", href: "tetris.html", art: featureTetris },
-      { title: "Chess", meta: "Game · #3", glyph: "♞", accent: "acid", href: "chess.html" },
-      { title: "2048", meta: "Game · #4", glyph: "⧉", accent: "orange", href: "June Chalenge and Extras/2048 By A.K. v 1.1.html" },
-      { title: "Snake Game", meta: "Game · #5", glyph: "〜", accent: "cyan", href: "snake game new.html" },
-      { title: "Space Invaders", meta: "Game · #6", glyph: "☄", accent: "pink", href: "Space Invaders.html" },
-      { title: "Typing Test", meta: "Applet · #7", glyph: "⌨", accent: "acid", href: "sptyping test.html" },
-    ],
+    status: "02 / reflex check",
+    title: "Reaction Test",
+    copy: "One tap, one number. Find out how fast your brain really is.",
+    cta: "Try it",
+    href: "reactin inf.html",
+    art: featureReaction,
   },
   {
-    key: "upcoming",
-    label: "Upcoming",
-    note: "in the workshop, not live yet",
-    tone: "acid",
-    speed: 46,
-    items: [
-      { title: "Neon Pinball", meta: "Concept", glyph: "◎", accent: "pink", soon: true },
-      { title: "Maze Runner", meta: "Prototype", glyph: "⌗", accent: "cyan", soon: true },
-      { title: "Sudoku Solver", meta: "In progress", glyph: "▦", accent: "acid", soon: true },
-      { title: "Flashcards", meta: "Planned", glyph: "❐", accent: "orange", soon: true },
-      { title: "Physics Sandbox", meta: "Concept", glyph: "◌", accent: "cyan", soon: true },
-      { title: "Rhythm Tap", meta: "Prototype", glyph: "♪", accent: "pink", soon: true },
-    ],
+    status: "03 / endless stack",
+    title: "Tetris",
+    copy: "Blocks fall, lines clear, speed climbs. The classic, rebuilt in the browser.",
+    cta: "Preview",
+    href: "tetris.html",
+    art: featureTetris,
   },
 ];
 
 const TOTAL = GROUPS.reduce((n, g) => n + g.links.length, 0);
 
 const url = (path: string) => BASE + encodeURI(path);
-
-const ACCENT: Record<RailItem["accent"], { text: string; border: string; shadow: string; glow: string }> = {
-  cyan: {
-    text: "text-neon-cyan",
-    border: "hover:border-neon-cyan",
-    shadow: "group-hover/card:shadow-[0_0_36px_color-mix(in_oklab,var(--neon-cyan)_35%,transparent)]",
-    glow: "var(--neon-cyan)",
-  },
-  pink: {
-    text: "text-neon-pink",
-    border: "hover:border-neon-pink",
-    shadow: "group-hover/card:shadow-[0_0_36px_color-mix(in_oklab,var(--neon-pink)_35%,transparent)]",
-    glow: "var(--neon-pink)",
-  },
-  acid: {
-    text: "text-acid",
-    border: "hover:border-acid",
-    shadow: "group-hover/card:shadow-[0_0_36px_color-mix(in_oklab,var(--acid)_35%,transparent)]",
-    glow: "var(--acid)",
-  },
-  orange: {
-    text: "text-neon-orange",
-    border: "hover:border-neon-orange",
-    shadow: "group-hover/card:shadow-[0_0_36px_color-mix(in_oklab,var(--neon-orange)_35%,transparent)]",
-    glow: "var(--neon-orange)",
-  },
-};
-
-const TONE: Record<Rail["tone"], string> = {
-  cyan: "text-neon-cyan",
-  pink: "text-neon-pink",
-  acid: "text-acid",
-};
 
 function useScrollY() {
   const [y, setY] = useState(0);
@@ -271,7 +194,7 @@ function Reveal({
           }
         });
       },
-      { rootMargin: "-6% 0px -10% 0px" },
+      { rootMargin: "-8% 0px -12% 0px" },
     );
     io.observe(node);
     return () => io.disconnect();
@@ -288,180 +211,35 @@ function Reveal({
   );
 }
 
-function RailCard({ item }: { item: RailItem }) {
-  const a = ACCENT[item.accent];
-  const inner = (
-    <>
-      <div className="relative h-[112px] overflow-hidden border-b border-border">
-        {item.art ? (
-          <img
-            src={item.art}
-            alt={item.title}
-            loading="lazy"
-            className="h-full w-full object-cover opacity-80 transition-all duration-500 group-hover/card:scale-110 group-hover/card:opacity-100"
-          />
-        ) : (
-          <div
-            className="h-full w-full transition-transform duration-500 group-hover/card:scale-110"
-            style={{
-              background: `radial-gradient(circle at 30% 25%, color-mix(in oklab, ${a.glow} 30%, transparent), transparent 62%), linear-gradient(140deg, var(--secondary), var(--background))`,
-            }}
-          />
-        )}
-        <span
-          className={`absolute inset-0 grid place-items-center text-4xl ${a.text} drop-shadow-[0_0_18px_currentColor] transition-transform duration-500 group-hover/card:-translate-y-1`}
-        >
-          {item.glyph}
-        </span>
-        {item.soon && (
-          <span className="absolute left-2 top-2 skew-tag border border-border bg-background/80 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-            soon
-          </span>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
-        <div className="min-w-0">
-          <div className="truncate text-[13px] font-extrabold tracking-[-0.01em]">{item.title}</div>
-          <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            {item.meta}
-          </div>
-        </div>
-        <span className={`font-mono text-sm ${item.soon ? "text-muted-foreground" : a.text}`}>
-          {item.soon ? "···" : "↗"}
-        </span>
-      </div>
-    </>
-  );
-
-  const cls = `group/card block w-[230px] shrink-0 border border-border bg-card/60 backdrop-blur-sm transition-all duration-300 ${a.border} ${a.shadow} ${
-    item.soon ? "opacity-70 hover:opacity-100" : "hover:-translate-y-1.5"
-  }`;
-
-  if (!item.href) return <div className={cls}>{inner}</div>;
+function Ticker({ reverse = false }: { reverse?: boolean }) {
+  const words = ["games", "tools", "quizzes", "experiments", "signal lab", "html · css · js"];
+  const row = [...words, ...words, ...words, ...words];
   return (
-    <a className={cls} href={url(item.href)} target="_blank" rel="noopener">
-      {inner}
-    </a>
-  );
-}
-
-function useIsMobile() {
-  const [m, setM] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const on = () => setM(mq.matches);
-    on();
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, []);
-  return m;
-}
-
-function MobileRail({ rail }: { rail: Rail }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const paused = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let raf = 0;
-    let last = performance.now();
-    const speed = 26; // px per second
-    const dir = rail.reverse ? -1 : 1;
-
-    const tick = (t: number) => {
-      const dt = (t - last) / 1000;
-      last = t;
-      if (!paused.current) {
-        const half = el.scrollWidth / 2;
-        let next = el.scrollLeft + dir * speed * dt;
-        if (next >= half) next -= half;
-        if (next < 0) next += half;
-        el.scrollLeft = next;
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-
-    const pause = () => {
-      paused.current = true;
-    };
-    const resume = () => {
-      window.setTimeout(() => (paused.current = false), 2500);
-    };
-    el.addEventListener("touchstart", pause, { passive: true });
-    el.addEventListener("touchend", resume, { passive: true });
-    el.addEventListener("pointerdown", pause, { passive: true });
-    el.addEventListener("pointerup", resume, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      el.removeEventListener("touchstart", pause);
-      el.removeEventListener("touchend", resume);
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("pointerup", resume);
-    };
-  }, [rail.reverse]);
-
-  const row = [...rail.items, ...rail.items];
-  return (
-    <div
-      ref={ref}
-      className="relative flex w-full gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      style={{ WebkitOverflowScrolling: "touch" }}
-    >
-      {row.map((item, i) => (
-        <RailCard key={`${rail.key}-m-${item.title}-${i}`} item={item} />
-      ))}
-    </div>
-  );
-}
-
-function AutoRail({ rail }: { rail: Rail }) {
-  const row = [...rail.items, ...rail.items];
-  const isMobile = useIsMobile();
-  return (
-    <div className="group/rail py-7">
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className={`h-2 w-2 rotate-45 ${TONE[rail.tone].replace("text-", "bg-")} shadow-[0_0_14px_currentColor]`} />
-          <h2 className={`font-mono text-[11px] uppercase tracking-[0.24em] ${TONE[rail.tone]}`}>
-            {rail.label}
-          </h2>
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            {rail.note}
-          </span>
-        </div>
-        <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground opacity-0 transition-opacity group-hover/rail:opacity-100 md:inline">
-          hover to pause
-        </span>
-      </div>
-      {isMobile ? (
-        <MobileRail rail={rail} />
-      ) : (
-        <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)]">
-          <div
-            className={`flex w-max gap-4 ${rail.reverse ? "animate-marquee-reverse" : "animate-marquee"} group-hover/rail:[animation-play-state:paused]`}
-            style={{ animationDuration: `${rail.speed}s` }}
+    <div className="relative flex overflow-hidden border-y border-border bg-secondary/40 py-3">
+      <div
+        className={`flex w-max shrink-0 items-center gap-8 pr-8 ${
+          reverse ? "animate-marquee-reverse" : "animate-marquee"
+        }`}
+      >
+        {row.map((word, i) => (
+          <span
+            key={`${word}-${i}`}
+            className="flex items-center gap-8 font-mono text-xs uppercase tracking-[0.28em] text-muted-foreground"
           >
-            {row.map((item, i) => (
-              <RailCard key={`${rail.key}-${item.title}-${i}`} item={item} />
-            ))}
-          </div>
-        </div>
-      )}
+            {word}
+            <i className="inline-block h-1.5 w-1.5 rotate-45 bg-acid shadow-[0_0_12px_var(--acid)]" />
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
-
 
 function Index() {
   const scrollY = useScrollY();
   const progress = useScrollProgress();
   const [query, setQuery] = useState("");
-  const [active, setActive] = useState("Games");
+  const [filter, setFilter] = useState("all");
   const [clock, setClock] = useState({ time: "--:--:--", date: "" });
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -505,41 +283,44 @@ function Index() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const term = query.trim().toLowerCase();
+  const results = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    return GROUPS.map((group) => ({
+      ...group,
+      links: group.links.filter(
+        ([label]) =>
+          (!term || label.toLowerCase().includes(term)) &&
+          (filter === "all" || group.name === filter),
+      ),
+    })).filter((group) => group.links.length > 0);
+  }, [query, filter]);
 
-  const rows = useMemo(() => {
-    const source = term
-      ? GROUPS.flatMap((g) => g.links.map(([label, path]) => ({ label, path, group: g.name })))
-      : (GROUPS.find((g) => g.name === active)?.links ?? []).map(([label, path]) => ({
-          label,
-          path,
-          group: active,
-        }));
-    return source.filter(({ label }) => !term || label.toLowerCase().includes(term));
-  }, [term, active]);
+  const shown = results.reduce((n, g) => n + g.links.length, 0);
 
   return (
     <div className="grain-overlay relative min-h-screen overflow-x-hidden bg-background font-display text-foreground">
+      {/* ambient neon field */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(circle at 82% 8%, color-mix(in oklab, var(--neon-pink) 18%, transparent), transparent 32%), radial-gradient(circle at 8% 58%, color-mix(in oklab, var(--neon-cyan) 15%, transparent), transparent 30%), radial-gradient(circle at 60% 96%, color-mix(in oklab, var(--acid) 10%, transparent), transparent 28%)",
+            "radial-gradient(circle at 78% 14%, color-mix(in oklab, var(--neon-pink) 16%, transparent), transparent 30%), radial-gradient(circle at 12% 62%, color-mix(in oklab, var(--neon-cyan) 14%, transparent), transparent 28%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.08]"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.09]"
         style={{
           backgroundImage:
             "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          transform: `translateY(${-(scrollY * 0.1)}px) skewY(-1deg)`,
+          backgroundSize: "72px 72px",
+          transform: `translateY(${-(scrollY * 0.12)}px)`,
         }}
       />
 
-      <div className="fixed inset-x-0 top-0 z-50 h-[3px]">
+      {/* scroll progress */}
+      <div className="fixed inset-x-0 top-0 z-50 h-[3px] bg-transparent">
         <div
           className="h-full origin-left bg-acid shadow-[0_0_18px_var(--acid)]"
           style={{ transform: `scaleX(${progress})` }}
@@ -547,7 +328,7 @@ function Index() {
       </div>
 
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-[70px] w-[min(1320px,calc(100%-36px))] items-center justify-between gap-4">
+        <div className="mx-auto flex h-[74px] w-[min(1240px,calc(100%-40px))] items-center justify-between">
           <a href="/" className="flex items-center gap-3">
             <span className="skew-tag grid h-8 w-8 place-items-center bg-acid font-mono text-xs text-acid-foreground shadow-[5px_5px_0_var(--neon-pink)]">
               {"</>"}
@@ -556,203 +337,250 @@ function Index() {
               HTML Creations <span className="text-neon-cyan">/ Signal Lab</span>
             </span>
           </a>
-          <div className="flex items-center gap-4">
-            <span className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-acid sm:block">
-              {clock.time}
-            </span>
-            <a
-              href="#directory"
-              className="skew-tag border border-border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-all hover:border-neon-cyan hover:text-neon-cyan"
-            >
-              Index ({TOTAL})
-            </a>
-          </div>
+          <span className="hidden items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground sm:flex">
+            <i className="h-1.5 w-1.5 animate-flicker rounded-full bg-acid shadow-[0_0_0_4px_color-mix(in_oklab,var(--acid)_14%,transparent),0_0_12px_var(--acid)]" />
+            system online
+          </span>
         </div>
       </header>
 
-      <main>
-        {/* HERO — offset editorial slab */}
-        <section className="relative overflow-hidden border-b border-border">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -left-24 top-10 h-[420px] w-[420px] animate-orbit rounded-full border border-neon-cyan/60 opacity-40"
-          />
-          <div className="mx-auto grid w-[min(1320px,calc(100%-36px))] items-end gap-8 py-14 lg:grid-cols-[1fr_auto] lg:py-20">
-            <div className="relative">
-              <p className="mb-5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-neon-cyan">
-                <span className="h-px w-9 bg-neon-cyan shadow-[0_0_10px_var(--neon-cyan)]" />
-                {TOTAL} projects · one archive · zero frameworks
-              </p>
-              <h1 className="text-[clamp(2.7rem,9vw,7.2rem)] font-extrabold uppercase leading-[0.82] tracking-[-0.075em]">
-                <span
-                  className="block"
-                  style={{ transform: `translateX(${Math.min(scrollY * 0.05, 60)}px)` }}
-                >
-                  Signal
-                </span>
-                <span
-                  className="text-glow-pink block text-neon-pink"
-                  style={{ transform: `translateX(${-Math.min(scrollY * 0.07, 90)}px)` }}
-                >
-                  Lab
-                </span>
-                <span
-                  className="text-glow-cyan block text-neon-cyan"
-                  style={{ transform: `translateX(${Math.min(scrollY * 0.1, 130)}px)` }}
-                >
-                  Live.
-                </span>
-              </h1>
-              <p className="mt-7 max-w-[440px] text-[15px] leading-[1.75] text-muted-foreground">
-                Games, tools, quizzes and experiments — all built by hand with plain HTML, CSS and
-                JavaScript. Everything below opens instantly in your browser.
-              </p>
+      <main className="mx-auto w-[min(1240px,calc(100%-40px))]">
+        {/* HERO */}
+        <section className="relative grid border-b border-border lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="relative py-16 lg:py-24 lg:pr-12">
+            <p className="mb-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-neon-cyan">
+              <span className="h-px w-9 bg-neon-cyan shadow-[0_0_10px_var(--neon-cyan)]" />
+              Independent web experiments / 001
+            </p>
+            <h1
+              className="max-w-[820px] text-[clamp(3rem,8.5vw,6.6rem)] font-extrabold leading-[0.86] tracking-[-0.075em]"
+              style={{ transform: `translateY(${scrollY * -0.08}px)` }}
+            >
+              <span className="block">Useful things.</span>
+              <span className="text-glow-cyan block text-neon-cyan">Made with</span>
+              <span
+                className="text-glow-pink block text-neon-pink"
+                style={{ transform: `translateX(${Math.min(scrollY * 0.06, 70)}px)` }}
+              >
+                code.
+              </span>
+            </h1>
+            <p className="mt-7 max-w-[460px] text-[15px] leading-[1.75] text-muted-foreground">
+              A live shelf of small tools, games, quizzes and digital experiments. Enter the lab.
+              Find something unexpected.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a
+                href="#directory"
+                className="skew-tag bg-acid px-5 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-acid-foreground transition-all hover:shadow-[0_0_28px_var(--acid)]"
+              >
+                Browse {TOTAL} projects
+              </a>
+              <a
+                href={url("Car Game.html")}
+                target="_blank"
+                rel="noopener"
+                className="skew-tag border border-border px-5 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-foreground transition-all hover:border-neon-pink hover:text-neon-pink"
+              >
+                Play featured ↗
+              </a>
             </div>
-
-            <div className="flex flex-col gap-4 lg:w-[300px]">
-              <div className="relative overflow-hidden border border-border bg-card/60 p-5 backdrop-blur-sm">
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute right-4 top-0 h-full w-px animate-scan bg-gradient-to-b from-transparent via-neon-pink to-transparent"
-                />
-                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                  Local signal · Doha, Qatar
-                </div>
-                <div className="text-glow-acid mt-2 font-mono text-[34px] tracking-[-0.06em] text-acid">
-                  {clock.time}
-                </div>
-                <div className="mt-1 text-xs text-muted-foreground">{clock.date}</div>
-              </div>
-              <div className="flex gap-3">
-                <a
-                  href={url("Car Game.html")}
-                  target="_blank"
-                  rel="noopener"
-                  className="skew-tag flex-1 bg-acid px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-acid-foreground transition-all hover:shadow-[0_0_28px_var(--acid)]"
-                >
-                  Play featured ↗
-                </a>
-                <a
-                  href="#directory"
-                  className="skew-tag flex-1 border border-border px-4 py-3 text-center font-mono text-[10px] uppercase tracking-[0.12em] transition-all hover:border-neon-pink hover:text-neon-pink"
-                >
-                  Browse all
-                </a>
-              </div>
-            </div>
+            <span className="absolute bottom-0 left-0 h-px w-2/3 bg-neon-pink shadow-[0_0_24px_var(--neon-pink)]" />
           </div>
+
+          <aside className="relative flex flex-col justify-between gap-10 overflow-hidden border-t border-border py-10 lg:border-l lg:border-t-0 lg:pl-9">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -right-32 top-8 h-64 w-64 animate-orbit rounded-full border border-neon-pink shadow-[0_0_0_18px_color-mix(in_oklab,var(--neon-pink)_5%,transparent),0_0_40px_color-mix(in_oklab,var(--neon-pink)_25%,transparent)]"
+            />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute right-5 top-0 h-full w-px animate-scan bg-gradient-to-b from-transparent via-neon-cyan to-transparent"
+            />
+            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+              Index / <b className="font-normal text-acid">{String(TOTAL).padStart(3, "0")}</b>{" "}
+              active projects
+            </div>
+            <div className="relative z-10">
+              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                Local signal · Doha, Qatar
+              </div>
+              <div className="text-glow-acid mt-2 font-mono text-[38px] tracking-[-0.06em] text-acid">
+                {clock.time}
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground">{clock.date}</div>
+            </div>
+            <p className="max-w-[230px] text-xs leading-[1.75] text-muted-foreground">
+              <strong className="mb-2 block text-[13px] text-foreground">Keep exploring.</strong>
+              Every project opens in a new tab. The collection is always in motion.
+            </p>
+          </aside>
         </section>
 
-        {/* AUTO-SCROLLING RAILS */}
-        <section className="border-b border-border">
-          <div className="mx-auto w-[min(1320px,calc(100%-36px))] divide-y divide-border">
-            {RAILS.map((rail, i) => (
-              <Reveal key={rail.key} delay={i * 90}>
-                <AutoRail rail={rail} />
+        <Ticker />
+
+        {/* FEATURED */}
+        <section className="py-16">
+          <Reveal>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-neon-pink">
+                  Curated signal
+                </p>
+                <h2 className="text-2xl tracking-[-0.06em]">What's in rotation</h2>
+              </div>
+              <span className="font-mono text-[11px] uppercase text-muted-foreground">
+                three picks
+              </span>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {FEATURED.map((item, i) => (
+              <Reveal key={item.title} delay={i * 110} className="h-full">
+                <article className="aurora-bloom group relative flex h-full flex-col overflow-hidden border border-border bg-card shadow-[var(--shadow-neon)] transition-transform duration-500 hover:-translate-y-2">
+                  <div className="relative z-10 overflow-hidden border-b border-border">
+                    <img
+                      src={item.art}
+                      alt={`${item.title} artwork`}
+                      loading="lazy"
+                      width={1280}
+                      height={960}
+                      className="h-52 w-full object-cover transition-transform duration-[900ms] group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="relative z-10 flex flex-1 flex-col justify-between p-6">
+                    <div>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-acid">
+                        {item.status}
+                      </span>
+                      <h3 className="mt-3 text-[34px] leading-[0.95] tracking-[-0.07em]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-[13px] leading-[1.65] text-muted-foreground">
+                        {item.copy}
+                      </p>
+                    </div>
+                    <a
+                      href={url(item.href)}
+                      target="_blank"
+                      rel="noopener"
+                      className="mt-6 self-start bg-acid px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.1em] text-acid-foreground transition-all hover:bg-neon-cyan hover:shadow-[0_0_22px_var(--neon-cyan)]"
+                    >
+                      {item.cta} ↗
+                    </a>
+                  </div>
+                </article>
               </Reveal>
             ))}
           </div>
         </section>
 
-        {/* DIRECTORY — sidebar + list */}
-        <section id="directory" className="mx-auto w-[min(1320px,calc(100%-36px))] py-16">
+        <Ticker reverse />
+
+        {/* DIRECTORY */}
+        <section id="directory" className="scroll-mt-24 py-16">
           <Reveal>
-            <div className="mb-9 flex flex-wrap items-end justify-between gap-5 border-b border-border pb-6">
-              <div>
-                <h2 className="text-[clamp(1.9rem,4.5vw,3.2rem)] font-extrabold uppercase leading-[0.9] tracking-[-0.05em]">
-                  The full <span className="text-neon-cyan">index</span>
-                </h2>
-                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  {rows.length} shown · {TOTAL} total
-                </p>
-              </div>
-              <div className="relative w-full max-w-[330px]">
+            <div className="flex flex-wrap items-center gap-4">
+              <label className="relative w-full max-w-[620px] flex-1">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="pointer-events-none absolute left-4 top-1/2 w-[17px] -translate-y-1/2 text-neon-cyan"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-4-4" />
+                </svg>
                 <input
                   ref={searchRef}
+                  type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search every project…"
-                  className="w-full border border-border bg-card/60 px-4 py-3 pr-14 font-mono text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-neon-cyan"
+                  placeholder="Search the signal lab…"
+                  autoComplete="off"
+                  className="w-full border border-border bg-card py-4 pl-12 pr-16 text-foreground shadow-[inset_0_-2px_var(--neon-cyan)] outline-none transition-colors placeholder:text-muted-foreground focus:border-neon-cyan"
                 />
-                <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 border border-border px-2 py-1 font-mono text-[10px] text-muted-foreground">
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground">
                   /
-                </kbd>
-              </div>
+                </span>
+              </label>
+              <span className="font-mono text-[11px] uppercase text-muted-foreground">
+                {shown} {shown === 1 ? "project" : "projects"}
+              </span>
             </div>
+
+            <nav className="mt-6 flex flex-wrap gap-2">
+              {["all", ...GROUPS.map((g) => g.name)].map((name) => (
+                <button
+                  key={name}
+                  onClick={() => setFilter(name)}
+                  className={`border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-all ${
+                    filter === name
+                      ? "border-acid bg-acid text-acid-foreground shadow-[0_0_20px_color-mix(in_oklab,var(--acid)_35%,transparent)]"
+                      : "border-border text-muted-foreground hover:border-acid hover:text-acid"
+                  }`}
+                >
+                  {name === "all" ? "All signals" : name}
+                </button>
+              ))}
+            </nav>
           </Reveal>
 
-          <div className="grid gap-10 lg:grid-cols-[230px_1fr]">
-            <aside className="lg:sticky lg:top-[96px] lg:self-start">
-              <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
-                {GROUPS.map((g) => {
-                  const on = !term && g.name === active;
-                  return (
-                    <button
-                      key={g.name}
-                      type="button"
-                      onClick={() => {
-                        setQuery("");
-                        setActive(g.name);
-                      }}
-                      className={`flex shrink-0 items-center justify-between gap-4 border px-4 py-3 text-left transition-all lg:w-full ${
-                        on
-                          ? "border-neon-cyan bg-neon-cyan/10 text-neon-cyan shadow-[0_0_24px_color-mix(in_oklab,var(--neon-cyan)_22%,transparent)]"
-                          : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground"
-                      }`}
-                    >
-                      <span className="font-mono text-[11px] uppercase tracking-[0.16em]">
-                        {g.icon} {g.name}
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            {results.map((group, index) => (
+              <Reveal key={group.name} delay={index * 90} className="h-full">
+                <article className="group relative h-full overflow-hidden border border-border bg-gradient-to-br from-card to-secondary shadow-[var(--shadow-neon)] transition-all duration-500 hover:-translate-y-1.5 hover:border-neon-cyan/60">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(115deg,transparent_45%,color-mix(in_oklab,var(--neon-cyan)_18%,transparent)_50%,transparent_55%)] transition-transform duration-700 group-hover:translate-x-full"
+                  />
+                  <div className="flex items-start justify-between gap-4 border-b border-border p-6">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-9 w-9 place-items-center border border-acid/40 bg-acid/10 text-base text-acid">
+                        {group.icon}
                       </span>
-                      <span className="font-mono text-[10px] opacity-70">
-                        {String(g.links.length).padStart(2, "0")}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              {!term && (
-                <p className="mt-4 hidden max-w-[210px] text-xs leading-relaxed text-muted-foreground lg:block">
-                  {GROUPS.find((g) => g.name === active)?.desc}
-                </p>
-              )}
-            </aside>
-
-            <div className="border-t border-border">
-              {rows.map((row, i) => (
-                <Reveal key={`${row.group}-${row.label}`} delay={Math.min(i * 35, 320)}>
-                  <a
-                    href={url(row.path)}
-                    target="_blank"
-                    rel="noopener"
-                    className="group/row flex items-center gap-4 border-b border-border px-2 py-5 transition-all hover:bg-neon-cyan/5 hover:pl-5 sm:gap-6"
-                  >
-                    <span className="font-mono text-[11px] text-muted-foreground transition-colors group-hover/row:text-neon-pink">
-                      {String(i + 1).padStart(2, "0")}
+                      <div>
+                        <h2 className="text-lg tracking-[-0.05em]">{group.name}</h2>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">{group.desc}</p>
+                      </div>
+                    </div>
+                    <span className="font-mono text-[11px] text-neon-pink">
+                      0{index + 1} / {String(group.links.length).padStart(2, "0")}
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-[clamp(1rem,2.4vw,1.5rem)] font-extrabold uppercase tracking-[-0.03em] transition-colors group-hover/row:text-neon-cyan">
-                      {row.label}
-                    </span>
-                    <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">
-                      {row.group}
-                    </span>
-                    <span className="font-mono text-sm text-muted-foreground transition-transform duration-300 group-hover/row:translate-x-1 group-hover/row:text-acid">
-                      ↗
-                    </span>
-                  </a>
-                </Reveal>
-              ))}
-              {rows.length === 0 && (
-                <div className="border border-dashed border-border px-5 py-20 text-center text-muted-foreground">
-                  <strong className="block text-foreground">No signal found.</strong>
-                  Try a different query.
-                </div>
-              )}
-            </div>
+                  </div>
+                  <div className="grid gap-0.5 p-3 sm:grid-cols-2">
+                    {group.links.map(([label, path]) => (
+                      <a
+                        key={label}
+                        href={url(path)}
+                        target="_blank"
+                        rel="noopener"
+                        className="flex items-center justify-between gap-2 border-l border-transparent px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:border-l-neon-cyan hover:bg-neon-cyan/8 hover:text-neon-cyan"
+                      >
+                        <span className="truncate">{label}</span>
+                        <span className="font-mono text-sm text-muted-foreground transition-transform">
+                          ↗
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              </Reveal>
+            ))}
           </div>
+
+          {shown === 0 && (
+            <div className="border border-dashed border-border px-5 py-20 text-center text-muted-foreground">
+              <strong className="block text-foreground">No signal found.</strong>
+              Try a different query or clear the current filter.
+            </div>
+          )}
         </section>
       </main>
 
-      <footer className="mx-auto flex w-[min(1320px,calc(100%-36px))] flex-wrap justify-between gap-4 border-t border-border py-8 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+      <footer className="mx-auto flex w-[min(1240px,calc(100%-40px))] flex-wrap justify-between gap-4 border-t border-border py-8 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
         <span>HTML / CSS / JS · Signal Lab</span>
         <a
           href="https://github.com/24-25ht/HTML"
