@@ -437,7 +437,7 @@ function Index() {
 
           <div className="grid gap-5 lg:grid-cols-3">
             {FEATURED.map((item, i) => (
-              <Reveal key={item.title} delay={i * 110}>
+              <Reveal key={item.title} delay={i * 110} className="h-full">
                 <article className="aurora-bloom group relative flex h-full flex-col overflow-hidden border border-border bg-card shadow-[var(--shadow-neon)] transition-transform duration-500 hover:-translate-y-2">
                   <div className="relative z-10 overflow-hidden border-b border-border">
                     <img
@@ -530,7 +530,7 @@ function Index() {
 
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
             {results.map((group, index) => (
-              <Reveal key={group.name} delay={index * 90}>
+              <Reveal key={group.name} delay={index * 90} className="h-full">
                 <article className="group relative h-full overflow-hidden border border-border bg-gradient-to-br from-card to-secondary shadow-[var(--shadow-neon)] transition-all duration-500 hover:-translate-y-1.5 hover:border-neon-cyan/60">
                   <span
                     aria-hidden
