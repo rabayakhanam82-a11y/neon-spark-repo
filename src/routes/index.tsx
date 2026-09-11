@@ -345,8 +345,83 @@ function RailCard({ item }: { item: RailItem }) {
   );
 }
 
+function useIsMobile() {
+  const [m, setM] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const on = () => setM(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return m;
+}
+
+function MobileRail({ rail }: { rail: Rail }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const paused = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let last = performance.now();
+    const speed = 26; // px per second
+    const dir = rail.reverse ? -1 : 1;
+
+    const tick = (t: number) => {
+      const dt = (t - last) / 1000;
+      last = t;
+      if (!paused.current) {
+        const half = el.scrollWidth / 2;
+        let next = el.scrollLeft + dir * speed * dt;
+        if (next >= half) next -= half;
+        if (next < 0) next += half;
+        el.scrollLeft = next;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const pause = () => {
+      paused.current = true;
+    };
+    const resume = () => {
+      window.setTimeout(() => (paused.current = false), 2500);
+    };
+    el.addEventListener("touchstart", pause, { passive: true });
+    el.addEventListener("touchend", resume, { passive: true });
+    el.addEventListener("pointerdown", pause, { passive: true });
+    el.addEventListener("pointerup", resume, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("touchstart", pause);
+      el.removeEventListener("touchend", resume);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("pointerup", resume);
+    };
+  }, [rail.reverse]);
+
+  const row = [...rail.items, ...rail.items];
+  return (
+    <div
+      ref={ref}
+      className="relative flex w-full gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
+      {row.map((item, i) => (
+        <RailCard key={`${rail.key}-m-${item.title}-${i}`} item={item} />
+      ))}
+    </div>
+  );
+}
+
 function AutoRail({ rail }: { rail: Rail }) {
   const row = [...rail.items, ...rail.items];
+  const isMobile = useIsMobile();
   return (
     <div className="group/rail py-7">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
@@ -359,23 +434,28 @@ function AutoRail({ rail }: { rail: Rail }) {
             {rail.note}
           </span>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground opacity-0 transition-opacity group-hover/rail:opacity-100">
+        <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground opacity-0 transition-opacity group-hover/rail:opacity-100 md:inline">
           hover to pause
         </span>
       </div>
-      <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)]">
-        <div
-          className={`flex w-max gap-4 ${rail.reverse ? "animate-marquee-reverse" : "animate-marquee"} group-hover/rail:[animation-play-state:paused]`}
-          style={{ animationDuration: `${rail.speed}s` }}
-        >
-          {row.map((item, i) => (
-            <RailCard key={`${rail.key}-${item.title}-${i}`} item={item} />
-          ))}
+      {isMobile ? (
+        <MobileRail rail={rail} />
+      ) : (
+        <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_5%,#000_95%,transparent)]">
+          <div
+            className={`flex w-max gap-4 ${rail.reverse ? "animate-marquee-reverse" : "animate-marquee"} group-hover/rail:[animation-play-state:paused]`}
+            style={{ animationDuration: `${rail.speed}s` }}
+          >
+            {row.map((item, i) => (
+              <RailCard key={`${rail.key}-${item.title}-${i}`} item={item} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
+
 
 function Index() {
   const scrollY = useScrollY();
