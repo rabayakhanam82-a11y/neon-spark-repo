@@ -62,26 +62,44 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --radius: 0.25rem;
+  --background: oklch(0.13 0.03 280);
+  --foreground: oklch(0.97 0.01 285);
+  --card: oklch(0.17 0.035 280);
+  --card-foreground: oklch(0.97 0.01 285);
+  --popover: oklch(0.17 0.035 280);
+  --popover-foreground: oklch(0.97 0.01 285);
+  --primary: oklch(0.85 0.15 200);
+  --primary-foreground: oklch(0.13 0.03 280);
+  --secondary: oklch(0.22 0.04 285);
+  --secondary-foreground: oklch(0.97 0.01 285);
+  --muted: oklch(0.22 0.04 285);
+  --muted-foreground: oklch(0.66 0.03 285);
+  --accent: oklch(0.72 0.3 330);
+  --accent-foreground: oklch(0.13 0.03 280);
+  --destructive: oklch(0.7 0.21 25);
+  --destructive-foreground: oklch(0.98 0.01 285);
+  --border: oklch(0.3 0.04 288);
+  --input: oklch(0.3 0.04 288);
+  --ring: oklch(0.85 0.15 200);
+  --acid: oklch(0.94 0.21 110);
+  --acid-foreground: oklch(0.13 0.03 280);
+  --neon-cyan: oklch(0.85 0.15 200);
+  --neon-pink: oklch(0.72 0.3 330);
+  --neon-orange: oklch(0.75 0.19 45);
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+  --gradient-aurora: conic-gradient(
+    from 120deg,
+    transparent 0 19%,
+    color-mix(in oklab, var(--neon-cyan) 30%, transparent) 22%,
+    transparent 27%,
+    color-mix(in oklab, var(--neon-pink) 28%, transparent) 45%,
+    transparent 53%,
+    color-mix(in oklab, var(--acid) 20%, transparent) 70%,
+    transparent 78%
+  );
+  --shadow-neon: 0 22px 80px oklch(0 0 0 / 0.5);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
