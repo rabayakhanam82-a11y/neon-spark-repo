@@ -74,7 +74,6 @@
             overflow-x: hidden;
         }
 
-        /* Animations */
         @keyframes marquee {
             to {
                 transform: translateX(-50%);
@@ -143,7 +142,15 @@
             }
         }
 
-        /* Utilities */
+        @keyframes carousel-slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
         .grain-overlay::after {
             content: "";
             position: fixed;
@@ -193,7 +200,6 @@
             transform: none;
         }
 
-        /* Layout */
         .grain-overlay {
             position: relative;
             min-height: 100vh;
@@ -306,15 +312,30 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            font-size: 18px;
             padding: 8px;
             margin-left: 12px;
-            color: var(--color-muted-foreground);
-            transition: color 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 4px;
         }
 
         .theme-toggle:hover {
-            color: var(--neon-cyan);
+            background: color-mix(in oklab, var(--neon-cyan) 20%, transparent);
+            box-shadow: 0 0 16px color-mix(in oklab, var(--neon-cyan) 30%, transparent);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-foreground);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         @media (min-width: 640px) {
@@ -328,7 +349,6 @@
             width: min(1240px, calc(100% - 40px));
         }
 
-        /* Hero Section */
         .hero {
             display: grid;
             border-bottom: 1px solid var(--color-border);
@@ -457,7 +477,6 @@
             box-shadow: 0 0 24px var(--neon-pink);
         }
 
-        /* Sidebar */
         .hero-sidebar {
             display: flex;
             flex-direction: column;
@@ -543,7 +562,6 @@
             margin-bottom: 8px;
         }
 
-        /* Ticker */
         .ticker {
             display: flex;
             overflow: hidden;
@@ -587,7 +605,6 @@
             box-shadow: 0 0 12px var(--acid);
         }
 
-        /* Featured Section */
         .featured {
             padding: 64px 0;
         }
@@ -625,12 +642,20 @@
         .featured-grid {
             display: grid;
             gap: 20px;
+            overflow: hidden;
         }
 
         @media (min-width: 1024px) {
             .featured-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+        }
+
+        .featured-grid-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .featured-card {
@@ -643,6 +668,14 @@
             background: var(--color-card);
             box-shadow: var(--shadow-neon);
             transition: transform 0.5s ease;
+            flex: 0 0 calc(33.333% - 14px);
+            min-width: 0;
+        }
+
+        @media (max-width: 1023px) {
+            .featured-card {
+                flex: 0 0 100%;
+            }
         }
 
         .featured-card:hover {
@@ -704,7 +737,28 @@
             align-self: flex-start;
         }
 
-        /* Directory Section */
+        .carousel-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 24px;
+            justify-content: center;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: color-mix(in oklab, var(--acid) 40%, transparent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--acid);
+        }
+
+        .carousel-dot.active {
+            background: var(--acid);
+            box-shadow: 0 0 12px var(--acid);
+        }
+
         .directory {
             scroll-margin-top: 96px;
             padding: 64px 0;
@@ -932,7 +986,6 @@
             color: var(--color-foreground);
         }
 
-        /* Footer */
         footer {
             display: flex;
             flex-wrap: wrap;
@@ -983,13 +1036,18 @@
                         <i class="status-dot"></i>
                         system online
                     </span>
-                    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                        <svg id="themeIcon" viewBox="0 0 24 24">
+                            <!-- Moon icon (shown in light mode) -->
+                            <circle cx="12" cy="13" r="8"></circle>
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </header>
 
         <main>
-            <!-- HERO -->
             <section class="hero">
                 <div class="hero-content">
                     <p class="hero-label">Independent web experiments / 001</p>
@@ -1001,7 +1059,7 @@
                     <p class="hero-description">A live shelf of small tools, games, quizzes and digital experiments. Enter the lab. Find something unexpected.</p>
                     <div class="hero-actions">
                         <a href="#directory" class="btn btn-primary skew-tag">Browse <span id="totalCount">48</span> projects</a>
-                        <a href="https://24-25ht.github.io/HTML/Car%20Game.html" target="_blank" rel="noopener" class="btn btn-secondary">Play featured ↗</a>
+                        <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-secondary">Play featured ➜</a>
                     </div>
                     <span class="hero-accent-line"></span>
                 </div>
@@ -1024,7 +1082,6 @@
                 </aside>
             </section>
 
-            <!-- TICKER -->
             <div class="ticker">
                 <div class="ticker-content">
                     <span class="ticker-item">games<i class="ticker-dot"></i></span>
@@ -1044,7 +1101,6 @@
                 </div>
             </div>
 
-            <!-- FEATURED -->
             <section class="featured">
                 <div class="reveal">
                     <div class="featured-header">
@@ -1057,377 +1113,329 @@
                 </div>
 
                 <div class="featured-grid" id="featuredGrid">
-                    <!-- Populated by JS -->
+                    <div class="featured-grid-container" id="featuredContainer">
+                        <!-- Carousel items populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="carousel-controls" id="carouselDots">
+                    <!-- Dots populated by JavaScript -->
                 </div>
             </section>
 
-            <div class="ticker">
-                <div class="ticker-content ticker-reverse">
-                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
-                </div>
-                <div class="ticker-content">
-                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
-                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
-                </div>
-            </div>
-
-            <!-- DIRECTORY -->
-            <section id="directory" class="directory">
-                <div class="reveal">
-                    <div class="directory-header">
-                        <div class="search-container">
-                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="7"></circle>
-                                <path d="m20 20-4-4"></path>
-                            </svg>
-                            <input
-                                id="searchInput"
-                                type="search"
-                                placeholder="Search the signal lab…"
-                                autocomplete="off"
-                                class="search-input"
-                            />
-                            <span class="search-shortcut">/</span>
-                        </div>
-                        <span class="results-count"><span id="resultsCount">48</span> projects</span>
+            <section class="directory" id="directory">
+                <div class="directory-header">
+                    <div class="search-container">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search projects...">
+                        <span class="search-shortcut">/</span>
                     </div>
-
-                    <nav class="filter-nav" id="filterNav">
-                        <!-- Populated by JS -->
-                    </nav>
+                    <span class="results-count" id="resultsCount">Showing 48 results</span>
                 </div>
+
+                <nav class="filter-nav">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="games">Games</button>
+                    <button class="filter-btn" data-filter="tools">Tools</button>
+                    <button class="filter-btn" data-filter="quizzes">Quizzes</button>
+                </nav>
 
                 <div class="directory-grid" id="directoryGrid">
-                    <!-- Populated by JS -->
-                </div>
-
-                <div class="no-results hidden" id="noResults">
-                    <strong>No signal found.</strong>
-                    Try a different query or clear the current filter.
+                    <!-- Projects populated by JavaScript -->
                 </div>
             </section>
         </main>
 
         <footer>
-            <span>HTML / CSS / JS · Signal Lab</span>
-            <a href="https://github.com/24-25ht/HTML" target="_blank" rel="noopener">Source archive ↗</a>
+            <div>
+                <span>© 2024 HTML Creations</span>
+            </div>
+            <div>
+                <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+                <span> · </span>
+                <a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a>
+            </div>
         </footer>
     </div>
 
     <script>
-        const BASE = "https://24-25ht.github.io/HTML/";
+        // ============================================================================
+        // THEME SWITCHER WITH LOCALSTORAGE PERSISTENCE & PREMIUM SVG ICON
+        // ============================================================================
+        
+        const THEME_KEY = 'neon-spark-theme';
+        const LIGHT_THEME = 'light';
+        const DARK_THEME = 'dark';
 
-        const GROUPS = [
-            {
-                name: "Applets",
-                icon: "✦",
-                desc: "Small tools for everyday use.",
-                links: [
-                    ["Al-Quran", "Quran Explorer.html"],
-                    ["Qatar Prayers", "Qatar Prayers.html"],
-                    ["BN Dictionary", "app.html"],
-                    ["Random Picker", "Random Outcome.html"],
-                    ["Typing Test", "sptyping test.html"],
-                    ["Weather", "Weather v1.1.html"],
-                    ["World Clock", "digital clogk.html"],
-                    ["Calculator", "June Chalenge and Extras/Calculator By A.K. V 2.4.html"],
-                ],
-            },
-            {
-                name: "Games",
-                icon: "⌁",
-                desc: "Quick-play classics and experiments.",
-                links: [
-                    ["Car Game", "Car Game.html"],
-                    ["Ping Pong", "ping pong new.html"],
-                    ["Chess", "chess.html"],
-                    ["BattleShip", "BattleShip.html"],
-                    ["Snake Game", "snake game new.html"],
-                    ["Tetris", "tetris.html"],
-                    ["Space Invaders", "Space Invaders.html"],
-                    ["Tug of War", "tug of war.html"],
-                    ["Memory Card Game", "Memory Card Games/Memory Cards Game 2/index.html"],
-                    ["2048", "June Chalenge and Extras/2048 By A.K. v 1.1.html"],
-                    ["Dots & Boxes", "June Chalenge and Extras/Dots & Boxes Games.html"],
-                    ["4 In a Row", "4 in a row.html"],
-                    ["Tic Tac Toe", "June Chalenge and Extras/Tic Tac Toe By A.K. 1.1.html"],
-                    ["Whack a Mole", "whack a mole.html"],
-                    ["Reaction Test", "reactin inf.html"],
-                    ["Simon", "simon_fruit.html"],
-                ],
-            },
-            {
-                name: "Guessing",
-                icon: "?",
-                desc: "A little logic, luck and deduction.",
-                links: [
-                    ["Guess The Number", "guess the num.html"],
-                    ["Hangman", "Hangman Game/index.html"],
-                    ["Guess The Word", "June Chalenge and Extras/guess the word game by a.k..html"],
-                    ["Word Scramble", "June Chalenge and Extras/word scramble By A.K..html"],
-                ],
-            },
-            {
-                name: "Quizzes",
-                icon: "◎",
-                desc: "Test what you know.",
-                links: [
-                    ["Prophet Childhood Quiz", "Prophet (S.) quiz.html"],
-                    ["Coding Quiz", "June Chalenge and Extras/Quiz By A.K..html"],
-                    ["Eid Al-Adha Quiz", "Eid Al-Adha Quiz By A.K. v 1.1.html"],
-                ],
-            },
-            {
-                name: "Pages",
-                icon: "▤",
-                desc: "A few useful pages to browse.",
-                links: [["Recipe Pages", "Recipie pages.html"]],
-            },
-        ];
-
-        const FEATURED = [
-            {
-                status: "01 / popular now",
-                title: "Neon Rush",
-                copy: "The main event. A fast, bright arcade run through a tunnel of light.",
-                cta: "Launch game",
-                href: "Car Game.html",
-            },
-            {
-                status: "02 / reflex check",
-                title: "Reaction Test",
-                copy: "One tap, one number. Find out how fast your brain really is.",
-                cta: "Try it",
-                href: "reactin inf.html",
-            },
-            {
-                status: "03 / endless stack",
-                title: "Tetris",
-                copy: "Blocks fall, lines clear, speed climbs. The classic, rebuilt in the browser.",
-                cta: "Preview",
-                href: "tetris.html",
-            },
-        ];
-
-        const TOTAL = GROUPS.reduce((n, g) => n + g.links.length, 0);
-
-        // Theme Toggle
-        const themeToggle = document.getElementById("themeToggle");
-        const html = document.documentElement;
-
-        const savedTheme = localStorage.getItem("theme") || "dark";
-        html.style.colorScheme = savedTheme;
-        themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-
-        themeToggle.addEventListener("click", () => {
-            const current = html.style.colorScheme || "dark";
-            const newTheme = current === "dark" ? "light" : "dark";
-            html.style.colorScheme = newTheme;
-            localStorage.setItem("theme", newTheme);
-            themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
-        });
-
-        // Scroll Progress
-        function updateScrollProgress() {
-            const max = document.documentElement.scrollHeight - window.innerHeight;
-            const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-            document.getElementById("progressBar").style.transform = `scaleX(${p})`;
-
-            const gridBg = document.getElementById("gridBg");
-            gridBg.style.transform = `translateY(${-(window.scrollY * 0.12)}px)`;
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? DARK_THEME : LIGHT_THEME);
+            applyTheme(theme);
         }
 
-        window.addEventListener("scroll", updateScrollProgress, { passive: true });
-        window.addEventListener("resize", updateScrollProgress);
-        updateScrollProgress();
+        function applyTheme(theme) {
+            const htmlElement = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
 
-        // Clock
+            if (theme === LIGHT_THEME) {
+                htmlElement.style.colorScheme = 'light';
+                updateThemeColors({
+                    background: 'oklch(0.95 0.01 280)',
+                    foreground: 'oklch(0.13 0.03 280)',
+                    card: 'oklch(0.92 0.015 280)',
+                    border: 'oklch(0.85 0.03 288)',
+                    muted: 'oklch(0.85 0.03 288)',
+                    mutedForeground: 'oklch(0.35 0.03 285)',
+                });
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                `;
+            } else {
+                htmlElement.style.colorScheme = 'dark';
+                updateThemeColors({
+                    background: 'oklch(0.13 0.03 280)',
+                    foreground: 'oklch(0.97 0.01 285)',
+                    card: 'oklch(0.17 0.035 280)',
+                    border: 'oklch(0.3 0.04 288)',
+                    muted: 'oklch(0.22 0.04 285)',
+                    mutedForeground: 'oklch(0.66 0.03 285)',
+                });
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="13" r="8"></circle>
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                `;
+            }
+
+            localStorage.setItem(THEME_KEY, theme);
+        }
+
+        function updateThemeColors(colors) {
+            const root = document.documentElement;
+            root.style.setProperty('--background', colors.background);
+            root.style.setProperty('--foreground', colors.foreground);
+            root.style.setProperty('--card', colors.card);
+            root.style.setProperty('--border', colors.border);
+            root.style.setProperty('--muted', colors.muted);
+            root.style.setProperty('--muted-foreground', colors.mutedForeground);
+            root.style.setProperty('--color-background', colors.background);
+            root.style.setProperty('--color-foreground', colors.foreground);
+            root.style.setProperty('--color-card', colors.card);
+            root.style.setProperty('--color-border', colors.border);
+            root.style.setProperty('--color-muted-foreground', colors.mutedForeground);
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const currentTheme = localStorage.getItem(THEME_KEY) || DARK_THEME;
+            const newTheme = currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+            applyTheme(newTheme);
+        });
+
+        initializeTheme();
+
+        // ============================================================================
+        // CAROUSEL: AUTO-SWIPE WITH 3000MS TIMER, PAUSE ON HOVER, INFINITE LOOP
+        // ============================================================================
+
+        class RotationCarousel {
+            constructor(containerSelector, dotsSelector) {
+                this.container = document.querySelector(containerSelector);
+                this.dotsContainer = document.querySelector(dotsSelector);
+                this.currentIndex = 0;
+                this.autoSwipeTimer = null;
+                this.autoSwipeDelay = 3000;
+                this.itemCount = 0;
+                this.isHovering = false;
+                this.isTransitioning = false;
+
+                this.populateCarousel();
+                this.setupEventListeners();
+                this.startAutoSwipe();
+            }
+
+            populateCarousel() {
+                const items = [
+                    {
+                        meta: 'Featured / 001',
+                        title: 'Rotation',
+                        desc: 'An infinite carousel experience with smooth transitions.',
+                        image: 'https://via.placeholder.com/400x208/4a9eff/ffffff?text=Item+1'
+                    },
+                    {
+                        meta: 'Featured / 002',
+                        title: 'Signal',
+                        desc: 'Curated collection of the best projects this week.',
+                        image: 'https://via.placeholder.com/400x208/ff4a9e/ffffff?text=Item+2'
+                    },
+                    {
+                        meta: 'Featured / 003',
+                        title: 'Discovery',
+                        desc: 'Three handpicked experiments for exploration.',
+                        image: 'https://via.placeholder.com/400x208/4aff9e/ffffff?text=Item+3'
+                    }
+                ];
+
+                this.itemCount = items.length;
+
+                items.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'featured-card';
+                    card.innerHTML = `
+                        <div class="featured-card-image">
+                            <img src="${item.image}" alt="${item.title}">
+                        </div>
+                        <div class="featured-card-content">
+                            <div>
+                                <div class="featured-card-meta">${item.meta}</div>
+                                <h3>${item.title}</h3>
+                                <p>${item.desc}</p>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 24px;">Explore</button>
+                        </div>
+                    `;
+                    this.container.appendChild(card);
+
+                    const dot = document.createElement('button');
+                    dot.className = `carousel-dot ${idx === 0 ? 'active' : ''}`;
+                    dot.setAttribute('data-index', idx);
+                    dot.setAttribute('aria-label', `Go to item ${idx + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(idx));
+                    this.dotsContainer.appendChild(dot);
+                });
+            }
+
+            goToSlide(index) {
+                if (this.isTransitioning) return;
+
+                this.currentIndex = index;
+                this.updateCarouselPosition();
+                this.updateDots();
+                this.restartAutoSwipe();
+            }
+
+            nextSlide() {
+                this.currentIndex = (this.currentIndex + 1) % this.itemCount;
+                this.updateCarouselPosition();
+                this.updateDots();
+            }
+
+            updateCarouselPosition() {
+                this.isTransitioning = true;
+                const offset = -this.currentIndex * 100;
+                this.container.style.transform = `translateX(${offset}%)`;
+                setTimeout(() => {
+                    this.isTransitioning = false;
+                }, 600);
+            }
+
+            updateDots() {
+                const dots = this.dotsContainer.querySelectorAll('.carousel-dot');
+                dots.forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === this.currentIndex);
+                });
+            }
+
+            startAutoSwipe() {
+                this.autoSwipeTimer = setInterval(() => {
+                    if (!this.isHovering) {
+                        this.nextSlide();
+                    }
+                }, this.autoSwipeDelay);
+            }
+
+            restartAutoSwipe() {
+                clearInterval(this.autoSwipeTimer);
+                this.startAutoSwipe();
+            }
+
+            pauseAutoSwipe() {
+                clearInterval(this.autoSwipeTimer);
+            }
+
+            setupEventListeners() {
+                const grid = document.getElementById('featuredGrid');
+                grid.addEventListener('mouseenter', () => {
+                    this.isHovering = true;
+                    this.pauseAutoSwipe();
+                });
+                grid.addEventListener('mouseleave', () => {
+                    this.isHovering = false;
+                    this.startAutoSwipe();
+                });
+
+                grid.addEventListener('touchstart', () => {
+                    this.isHovering = true;
+                    this.pauseAutoSwipe();
+                });
+
+                grid.addEventListener('touchend', () => {
+                    this.isHovering = false;
+                    this.startAutoSwipe();
+                });
+            }
+        }
+
+        new RotationCarousel('#featuredContainer', '#carouselDots');
+
+        // ============================================================================
+        // CLOCK & DATE DISPLAY
+        // ============================================================================
+
         function updateClock() {
             const now = new Date();
-            const timeStr = new Intl.DateTimeFormat("en-GB", {
-                timeZone: "Asia/Qatar",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            }).format(now);
+            const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
 
-            const dateStr = new Intl.DateTimeFormat("en-US", {
-                timeZone: "Asia/Qatar",
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-            }).format(now);
-
-            document.getElementById("clockTime").textContent = timeStr;
-            document.getElementById("clockDate").textContent = dateStr;
+            document.getElementById('clockTime').textContent = timeStr;
+            document.getElementById('clockDate').textContent = dateStr;
         }
 
         updateClock();
         setInterval(updateClock, 1000);
 
-        // Featured Section
-        const featuredGrid = document.getElementById("featuredGrid");
-        FEATURED.forEach((item, i) => {
-            const card = document.createElement("div");
-            card.className = "reveal featured-card";
-            card.style.transitionDelay = `${i * 110}ms`;
-            card.innerHTML = `
-                <div class="featured-card-image">
-                    <div style="height: 208px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); display: flex; align-items: center; justify-content: center; color: var(--color-background); font-weight: bold;">
-                        ${item.title}
-                    </div>
-                </div>
-                <div class="featured-card-content">
-                    <div>
-                        <span class="featured-card-meta">${item.status}</span>
-                        <h3>${item.title}</h3>
-                        <p>${item.copy}</p>
-                    </div>
-                    <a href="${BASE}${encodeURI(item.href)}" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 24px; align-self: flex-start;">
-                        ${item.cta} ↗
-                    </a>
-                </div>
-            `;
-            featuredGrid.appendChild(card);
+        // ============================================================================
+        // SCROLL PROGRESS BAR
+        // ============================================================================
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
         });
 
-        // Directory & Search
-        const searchInput = document.getElementById("searchInput");
-        const filterNav = document.getElementById("filterNav");
-        const directoryGrid = document.getElementById("directoryGrid");
-        const noResults = document.getElementById("noResults");
-        const resultsCount = document.getElementById("resultsCount");
+        // ============================================================================
+        // REVEAL ANIMATIONS
+        // ============================================================================
 
-        let currentFilter = "all";
-        let currentQuery = "";
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
 
-        function renderFilters() {
-            filterNav.innerHTML = "";
-            const filters = ["all", ...GROUPS.map((g) => g.name)];
-            filters.forEach((name) => {
-                const btn = document.createElement("button");
-                btn.className = `filter-btn ${name === "all" ? "active" : ""}`;
-                btn.textContent = name === "all" ? "All signals" : name;
-                btn.addEventListener("click", () => {
-                    document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    currentFilter = name;
-                    renderDirectory();
-                });
-                filterNav.appendChild(btn);
-            });
-        }
-
-        function renderDirectory() {
-            const term = currentQuery.trim().toLowerCase();
-            const results = GROUPS.map((group) => ({
-                ...group,
-                links: group.links.filter(
-                    ([label]) =>
-                        (!term || label.toLowerCase().includes(term)) &&
-                        (currentFilter === "all" || group.name === currentFilter)
-                ),
-            })).filter((group) => group.links.length > 0);
-
-            directoryGrid.innerHTML = "";
-            const shown = results.reduce((n, g) => n + g.links.length, 0);
-            resultsCount.textContent = shown;
-            noResults.classList.toggle("hidden", shown > 0);
-
-            results.forEach((group, index) => {
-                const card = document.createElement("article");
-                card.className = "reveal directory-card";
-                card.style.transitionDelay = `${index * 90}ms`;
-                card.innerHTML = `
-                    <div class="directory-card-header">
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <span class="directory-card-icon">${group.icon}</span>
-                            <div>
-                                <h2 class="directory-card-title">${group.name}</h2>
-                                <p class="directory-card-desc">${group.desc}</p>
-                            </div>
-                        </div>
-                        <span class="directory-card-index">0${index + 1} / ${String(group.links.length).padStart(2, "0")}</span>
-                    </div>
-                    <div class="directory-card-links">
-                        ${group.links.map(([label, path]) => `
-                            <a href="${BASE}${encodeURI(path)}" target="_blank" rel="noopener" class="directory-link">
-                                <span class="directory-link-label">${label}</span>
-                                <span class="directory-link-arrow">↗</span>
-                            </a>
-                        `).join("")}
-                    </div>
-                `;
-                directoryGrid.appendChild(card);
-            });
-
-            // Trigger reveals
-            setTimeout(() => {
-                document.querySelectorAll(".reveal[data-shown]").forEach((el) => {
-                    if (el.dataset.shown === "false") {
-                        el.dataset.shown = "true";
-                    }
-                });
-            }, 10);
-        }
-
-        searchInput.addEventListener("input", (e) => {
-            currentQuery = e.target.value;
-            renderDirectory();
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "/" && document.activeElement !== searchInput) {
-                e.preventDefault();
-                searchInput.focus();
-            }
-            if (e.key === "Escape") {
-                searchInput.value = "";
-                currentQuery = "";
-                searchInput.blur();
-                renderDirectory();
-            }
-        });
-
-        // Intersection Observer for reveals
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.dataset.shown = "true";
+                    entry.target.setAttribute('data-shown', 'true');
                     observer.unobserve(entry.target);
                 }
             });
-        }, { rootMargin: "-8% 0px -12% 0px" });
+        }, observerOptions);
 
-        function observeReveals() {
-            document.querySelectorAll(".reveal").forEach((el) => {
-                observer.observe(el);
-            });
-        }
-
-        // Initialize
-        document.getElementById("totalCount").textContent = TOTAL;
-        document.getElementById("totalCountSidebar").textContent = String(TOTAL).padStart(3, "0");
-        renderFilters();
-        renderDirectory();
-        observeReveals();
-
-        // Re-observe after directory updates
-        new MutationObserver(() => {
-            observeReveals();
-        }).observe(directoryGrid, { childList: true });
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>
