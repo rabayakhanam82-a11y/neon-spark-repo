@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML Creations / Signal Lab — Games, Tools & Experiments</title>
+    <meta name="description" content="A live shelf of 32 browser games, tools, quizzes and experiments built with plain HTML, CSS and JavaScript. Enter the lab.">
+    <meta property="og:title" content="HTML Creations / Signal Lab">
+    <meta property="og:description" content="32 browser games, tools, quizzes and experiments built with plain HTML, CSS and JavaScript.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-color: var(--color-border);
+        }
+
+        :root {
+            --radius: 0.25rem;
+            --background: oklch(0.13 0.03 280);
+            --foreground: oklch(0.97 0.01 285);
+            --card: oklch(0.17 0.035 280);
+            --card-foreground: oklch(0.97 0.01 285);
+            --popover: oklch(0.17 0.035 280);
+            --popover-foreground: oklch(0.97 0.01 285);
+            --primary: oklch(0.85 0.15 200);
+            --primary-foreground: oklch(0.13 0.03 280);
+            --secondary: oklch(0.22 0.04 285);
+            --secondary-foreground: oklch(0.97 0.01 285);
+            --muted: oklch(0.22 0.04 285);
+            --muted-foreground: oklch(0.66 0.03 285);
+            --accent: oklch(0.72 0.3 330);
+            --accent-foreground: oklch(0.13 0.03 280);
+            --destructive: oklch(0.7 0.21 25);
+            --destructive-foreground: oklch(0.98 0.01 285);
+            --border: oklch(0.3 0.04 288);
+            --input: oklch(0.3 0.04 288);
+            --ring: oklch(0.85 0.15 200);
+            --acid: oklch(0.94 0.21 110);
+            --acid-foreground: oklch(0.13 0.03 280);
+            --neon-cyan: oklch(0.85 0.15 200);
+            --neon-pink: oklch(0.72 0.3 330);
+            --neon-orange: oklch(0.75 0.19 45);
+            --font-display: "Manrope", system-ui, sans-serif;
+            --font-mono: "DM Mono", ui-monospace, monospace;
+            --gradient-aurora: conic-gradient(
+                from 120deg,
+                transparent 0 19%,
+                color-mix(in oklab, var(--neon-cyan) 30%, transparent) 22%,
+                transparent 27%,
+                color-mix(in oklab, var(--neon-pink) 28%, transparent) 45%,
+                transparent 53%,
+                color-mix(in oklab, var(--acid) 20%, transparent) 70%,
+                transparent 78%
+            );
+            --shadow-neon: 0 22px 80px oklch(0 0 0 / 0.5);
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-foreground);
+            font-family: var(--font-display);
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes marquee {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes marquee-reverse {
+            from {
+                transform: translateX(-50%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes orbit {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes scan {
+            0%, 100% {
+                transform: translateY(-40%);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(35%);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes aurora-drift {
+            0% {
+                transform: translate(-8%, 5%) rotate(0deg) scale(0.95);
+            }
+            50% {
+                transform: translate(7%, -5%) rotate(12deg) scale(1.1);
+            }
+            100% {
+                transform: translate(-2%, 8%) rotate(-8deg) scale(1);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 92%, 100% {
+                opacity: 1;
+            }
+            93% {
+                opacity: 0.35;
+            }
+            95% {
+                opacity: 1;
+            }
+            96% {
+                opacity: 0.55;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+
+        /* Utilities */
+        .grain-overlay::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            pointer-events: none;
+            opacity: 0.03;
+            background: repeating-linear-gradient(0deg, transparent 0 3px, oklch(1 0 0) 4px);
+            mix-blend-mode: screen;
+        }
+
+        .aurora-bloom::before {
+            content: "";
+            position: absolute;
+            inset: -45%;
+            pointer-events: none;
+            background: var(--gradient-aurora);
+            filter: blur(28px);
+            opacity: 0.6;
+            animation: aurora-drift 9s ease-in-out infinite alternate;
+        }
+
+        .text-glow-cyan {
+            text-shadow: 0 0 28px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
+        }
+
+        .text-glow-pink {
+            text-shadow: 0 0 28px color-mix(in oklab, var(--neon-pink) 45%, transparent);
+        }
+
+        .text-glow-acid {
+            text-shadow: 0 0 22px color-mix(in oklab, var(--acid) 45%, transparent);
+        }
+
+        .skew-tag {
+            transform: skew(-12deg);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(42px) skewY(2deg);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal[data-shown="true"] {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Layout */
+        .grain-overlay {
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: var(--font-display);
+            color: var(--color-foreground);
+        }
+
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            pointer-events: none;
+            background: radial-gradient(circle at 78% 14%, color-mix(in oklab, var(--neon-pink) 16%, transparent), transparent 30%), radial-gradient(circle at 12% 62%, color-mix(in oklab, var(--neon-cyan) 12%, transparent), transparent 25%);
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            pointer-events: none;
+            opacity: 0.09;
+            background-image: linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+            background-size: 72px 72px;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            inset-x: 0;
+            top: 0;
+            z-index: 50;
+            height: 3px;
+            background: transparent;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            origin: 0 0;
+            background: var(--acid);
+            box-shadow: 0 0 18px var(--acid);
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            border-bottom: 1px solid var(--color-border);
+            background: color-mix(in oklab, var(--background) 80%, transparent);
+            backdrop-filter: blur(12px);
+        }
+
+        .header-content {
+            display: flex;
+            height: 74px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 auto;
+            width: min(1240px, calc(100% - 40px));
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-foreground);
+        }
+
+        .logo-tag {
+            display: grid;
+            place-items: center;
+            height: 32px;
+            width: 32px;
+            background: var(--acid);
+            color: var(--color-background);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            box-shadow: 5px 5px 0 var(--neon-pink);
+            font-weight: 800;
+        }
+
+        .header-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+        }
+
+        .header-status {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--color-muted-foreground);
+        }
+
+        .status-dot {
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: var(--acid);
+            box-shadow: 0 0 0 4px color-mix(in oklab, var(--acid) 14%, transparent), 0 0 12px var(--acid);
+            animation: flicker 5s steps(2, end) infinite;
+        }
+
+        @media (min-width: 640px) {
+            .header-status {
+                display: flex;
+            }
+        }
+
+        main {
+            margin: 0 auto;
+            width: min(1240px, calc(100% - 40px));
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            border-bottom: 1px solid var(--color-border);
+            gap: 0;
+        }
+
+        @media (min-width: 1024px) {
+            .hero {
+                grid-template-columns: minmax(0, 1fr) 340px;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            padding: 64px 0;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-content {
+                padding: 96px 0;
+                padding-right: 48px;
+            }
+        }
+
+        .hero-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--neon-cyan);
+            margin-bottom: 24px;
+        }
+
+        .hero-label::before {
+            content: "";
+            height: 1px;
+            width: 36px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8.5vw, 6.6rem);
+            font-weight: 800;
+            line-height: 0.86;
+            letter-spacing: -0.075em;
+            max-width: 820px;
+            margin-bottom: 28px;
+        }
+
+        .hero-subtitle-1 {
+            display: block;
+        }
+
+        .hero-subtitle-2 {
+            display: block;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 28px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
+        }
+
+        .hero-subtitle-3 {
+            display: block;
+            color: var(--neon-pink);
+            text-shadow: 0 0 28px color-mix(in oklab, var(--neon-pink) 45%, transparent);
+        }
+
+        .hero-description {
+            max-width: 460px;
+            font-size: 15px;
+            line-height: 1.75;
+            color: var(--color-muted-foreground);
+            margin-top: 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 36px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--acid);
+            color: var(--color-background);
+            border-color: var(--acid);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 28px var(--acid);
+        }
+
+        .btn-secondary {
+            border-color: var(--color-border);
+            color: var(--color-foreground);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
+        .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 1px;
+            width: 66.66%;
+            background: var(--neon-pink);
+            box-shadow: 0 0 24px var(--neon-pink);
+        }
+
+        /* Sidebar */
+        .hero-sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 40px;
+            overflow: hidden;
+            border-top: 1px solid var(--color-border);
+            padding: 40px;
+            position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-sidebar {
+                border-left: 1px solid var(--color-border);
+                border-top: none;
+                padding-left: 36px;
+            }
+        }
+
+        .sidebar-orbit {
+            position: absolute;
+            right: -128px;
+            top: 32px;
+            height: 256px;
+            width: 256px;
+            border: 1px solid var(--neon-pink);
+            border-radius: 50%;
+            box-shadow: 0 0 0 18px color-mix(in oklab, var(--neon-pink) 5%, transparent);
+            animation: orbit 12s linear infinite;
+            pointer-events: none;
+        }
+
+        .sidebar-scan {
+            position: absolute;
+            right: 20px;
+            top: 0;
+            height: 100%;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent);
+            animation: scan 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .sidebar-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--color-muted-foreground);
+        }
+
+        .sidebar-clock {
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar-clock-time {
+            font-family: var(--font-mono);
+            font-size: 38px;
+            letter-spacing: -0.06em;
+            color: var(--acid);
+            text-shadow: 0 0 22px color-mix(in oklab, var(--acid) 45%, transparent);
+            margin-top: 8px;
+        }
+
+        .sidebar-clock-date {
+            font-size: 12px;
+            color: var(--color-muted-foreground);
+            margin-top: 8px;
+        }
+
+        .sidebar-text {
+            font-size: 12px;
+            line-height: 1.75;
+            color: var(--color-muted-foreground);
+            max-width: 230px;
+        }
+
+        .sidebar-text strong {
+            display: block;
+            font-size: 13px;
+            color: var(--color-foreground);
+            margin-bottom: 8px;
+        }
+
+        /* Ticker */
+        .ticker {
+            display: flex;
+            overflow: hidden;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            background: color-mix(in oklab, var(--secondary) 40%, transparent);
+            padding: 12px 0;
+        }
+
+        .ticker-content {
+            display: flex;
+            width: max-content;
+            shrink: 0;
+            align-items: center;
+            gap: 32px;
+            padding-right: 32px;
+            animation: marquee 26s linear infinite;
+        }
+
+        .ticker-reverse {
+            animation: marquee-reverse 26s linear infinite;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.28em;
+            color: var(--color-muted-foreground);
+        }
+
+        .ticker-dot {
+            display: inline-block;
+            height: 6px;
+            width: 6px;
+            transform: rotate(45deg);
+            background: var(--acid);
+            box-shadow: 0 0 12px var(--acid);
+        }
+
+        /* Featured Section */
+        .featured {
+            padding: 64px 0;
+        }
+
+        .featured-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .featured-title-group h2 {
+            font-size: 24px;
+            letter-spacing: -0.06em;
+        }
+
+        .featured-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--neon-pink);
+            margin-bottom: 8px;
+        }
+
+        .featured-count {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--color-muted-foreground);
+        }
+
+        .featured-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 1024px) {
+            .featured-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .featured-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            background: var(--color-card);
+            box-shadow: var(--shadow-neon);
+            transition: transform 0.5s ease;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .featured-card-image {
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .featured-card img {
+            height: 208px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 900ms ease;
+        }
+
+        .featured-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .featured-card-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+        }
+
+        .featured-card-meta {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--acid);
+        }
+
+        .featured-card h3 {
+            font-size: 34px;
+            line-height: 0.95;
+            letter-spacing: -0.07em;
+            margin-top: 12px;
+        }
+
+        .featured-card p {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--color-muted-foreground);
+            margin-top: 12px;
+        }
+
+        .featured-card .btn {
+            margin-top: 24px;
+            align-self: flex-start;
+        }
+
+        /* Directory Section */
+        .directory {
+            scroll-margin-top: 96px;
+            padding: 64px 0;
+        }
+
+        .directory-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 620px;
+            flex: 1;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            width: 17px;
+            height: auto;
+            transform: translateY(-50%);
+            color: var(--neon-cyan);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            border: 1px solid var(--color-border);
+            background: var(--color-card);
+            padding: 16px 64px 16px 48px;
+            font-size: 14px;
+            color: var(--color-foreground);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 -2px var(--neon-cyan);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-muted-foreground);
+        }
+
+        .search-input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .search-shortcut {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 1px solid var(--color-border);
+            padding: 2px 8px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--color-muted-foreground);
+        }
+
+        .results-count {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--color-muted-foreground);
+        }
+
+        .filter-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--color-border);
+            padding: 8px 14px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-muted-foreground);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--acid);
+            color: var(--acid);
+        }
+
+        .filter-btn.active {
+            border-color: var(--acid);
+            background: var(--acid);
+            color: var(--color-background);
+            box-shadow: 0 0 20px color-mix(in oklab, var(--acid) 35%, transparent);
+        }
+
+        .directory-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 1024px) {
+            .directory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .directory-card {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            background: linear-gradient(135deg, var(--color-card), var(--secondary));
+            box-shadow: var(--shadow-neon);
+            transition: all 0.5s ease;
+        }
+
+        .directory-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--neon-cyan);
+        }
+
+        .directory-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 1px solid var(--color-border);
+            padding: 24px;
+        }
+
+        .directory-card-icon {
+            display: grid;
+            place-items: center;
+            height: 36px;
+            width: 36px;
+            border: 1px solid color-mix(in oklab, var(--acid) 40%, transparent);
+            background: color-mix(in oklab, var(--acid) 10%, transparent);
+            font-size: 16px;
+            color: var(--acid);
+        }
+
+        .directory-card-title {
+            font-size: 18px;
+            letter-spacing: -0.05em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .directory-card-desc {
+            font-size: 11px;
+            color: var(--color-muted-foreground);
+        }
+
+        .directory-card-index {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--neon-pink);
+        }
+
+        .directory-card-links {
+            display: grid;
+            gap: 2px;
+            padding: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .directory-card-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .directory-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            border-left: 1px solid transparent;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-foreground);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .directory-link:hover {
+            border-left-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
+
+        .directory-link-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .directory-link-arrow {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--color-muted-foreground);
+            transition: transform 0.3s ease;
+        }
+
+        .directory-link:hover .directory-link-arrow {
+            transform: translateX(2px);
+        }
+
+        .no-results {
+            border: 1px dashed var(--color-border);
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--color-muted-foreground);
+        }
+
+        .no-results strong {
+            display: block;
+            color: var(--color-foreground);
+        }
+
+        /* Footer */
+        footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            border-top: 1px solid var(--color-border);
+            padding: 32px 0;
+            margin: 0 auto;
+            width: min(1240px, calc(100% - 40px));
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-muted-foreground);
+        }
+
+        footer a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 28px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="grain-overlay">
+        <div class="ambient-bg"></div>
+        <div class="grid-bg" id="gridBg"></div>
+        <div class="scroll-progress">
+            <div class="scroll-progress-bar" id="progressBar"></div>
+        </div>
+
+        <header>
+            <div class="header-content">
+                <a href="/" class="header-logo">
+                    <div class="logo-tag">&lt;/&gt;</div>
+                    <span class="header-title">HTML Creations <span style="color: var(--neon-cyan);">/ Signal Lab</span></span>
+                </a>
+                <span class="header-status">
+                    <i class="status-dot"></i>
+                    system online
+                </span>
+            </div>
+        </header>
+
+        <main>
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-content">
+                    <p class="hero-label">Independent web experiments / 001</p>
+                    <h1 class="hero-title" id="heroTitle">
+                        <span class="hero-subtitle-1">Useful things.</span>
+                        <span class="hero-subtitle-2">Made with</span>
+                        <span class="hero-subtitle-3" id="heroCode">code.</span>
+                    </h1>
+                    <p class="hero-description">A live shelf of small tools, games, quizzes and digital experiments. Enter the lab. Find something unexpected.</p>
+                    <div class="hero-actions">
+                        <a href="#directory" class="btn btn-primary skew-tag">Browse <span id="totalCount">48</span> projects</a>
+                        <a href="https://24-25ht.github.io/HTML/Car%20Game.html" target="_blank" rel="noopener" class="btn btn-secondary">Play featured ↗</a>
+                    </div>
+                    <span class="hero-accent-line"></span>
+                </div>
+
+                <aside class="hero-sidebar">
+                    <span class="sidebar-orbit"></span>
+                    <span class="sidebar-scan"></span>
+                    <div>
+                        <div class="sidebar-label">Index / <b style="color: var(--acid);" id="totalCountSidebar">48</b> active projects</div>
+                    </div>
+                    <div class="sidebar-clock">
+                        <div class="sidebar-label">Local signal · Doha, Qatar</div>
+                        <div class="sidebar-clock-time" id="clockTime">--:--:--</div>
+                        <div class="sidebar-clock-date" id="clockDate"></div>
+                    </div>
+                    <p class="sidebar-text">
+                        <strong>Keep exploring.</strong>
+                        Every project opens in a new tab. The collection is always in motion.
+                    </p>
+                </aside>
+            </section>
+
+            <!-- TICKER -->
+            <div class="ticker">
+                <div class="ticker-content" id="ticker1">
+                    <!-- Auto-generated -->
+                </div>
+            </div>
+
+            <!-- FEATURED -->
+            <section class="featured">
+                <div class="reveal">
+                    <div class="featured-header">
+                        <div class="featured-title-group">
+                            <p class="featured-label">Curated signal</p>
+                            <h2>What's in rotation</h2>
+                        </div>
+                        <span class="featured-count">three picks</span>
+                    </div>
+                </div>
+
+                <div class="featured-grid" id="featuredGrid">
+                    <!-- Auto-generated -->
+                </div>
+            </section>
+
+            <!-- TICKER -->
+            <div class="ticker">
+                <div class="ticker-content ticker-reverse" id="ticker2">
+                    <!-- Auto-generated -->
+                </div>
+            </div>
+
+            <!-- DIRECTORY -->
+            <section id="directory" class="directory">
+                <div class="reveal">
+                    <div class="directory-header">
+                        <label class="search-container">
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <path d="m20 20-4-4"></path>
+                            </svg>
+                            <input type="search" id="searchInput" class="search-input" placeholder="Search the signal lab…" autocomplete="off">
+                            <span class="search-shortcut">/</span>
+                        </label>
+                        <span class="results-count"><span id="resultsCount">48</span> projects</span>
+                    </div>
+
+                    <nav class="filter-nav" id="filterNav">
+                        <!-- Auto-generated -->
+                    </nav>
+                </div>
+
+                <div class="directory-grid" id="directoryGrid">
+                    <!-- Auto-generated -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <span>HTML / CSS / JS · Signal Lab</span>
+            <a href="https://github.com/rabayakhanam82-a11y/neon-spark-repo" target="_blank" rel="noopener">Source ↗</a>
+        </footer>
+    </div>
+
+    <script>
+        const BASE = "https://24-25ht.github.io/HTML/";
+
+        const GROUPS = [
+            {
+                name: "Applets",
+                icon: "✦",
+                desc: "Small tools for everyday use.",
+                links: [
+                    ["Al-Quran", "Quran Explorer.html"],
+                    ["Qatar Prayers", "Qatar Prayers.html"],
+                    ["BN Dictionary", "app.html"],
+                    ["Random Picker", "Random Outcome.html"],
+                    ["Typing Test", "sptyping test.html"],
+                    ["Weather", "Weather v1.1.html"],
+                    ["World Clock", "digital clogk.html"],
+                    ["Calculator", "June Chalenge and Extras/Calculator By A.K. V 2.4.html"],
+                ],
+            },
+            {
+                name: "Games",
+                icon: "⌁",
+                desc: "Quick-play classics and experiments.",
+                links: [
+                    ["Car Game", "Car Game.html"],
+                    ["Ping Pong", "ping pong new.html"],
+                    ["Chess", "chess.html"],
+                    ["BattleShip", "BattleShip.html"],
+                    ["Snake Game", "snake game new.html"],
+                    ["Tetris", "tetris.html"],
+                    ["Space Invaders", "Space Invaders.html"],
+                    ["Tug of War", "tug of war.html"],
+                    ["Memory Card Game", "Memory Card Games/Memory Cards Game 2/index.html"],
+                    ["2048", "June Chalenge and Extras/2048 By A.K. v 1.1.html"],
+                    ["Dots & Boxes", "June Chalenge and Extras/Dots & Boxes Games.html"],
+                    ["4 In a Row", "4 in a row.html"],
+                    ["Tic Tac Toe", "June Chalenge and Extras/Tic Tac Toe By A.K. 1.1.html"],
+                    ["Whack a Mole", "whack a mole.html"],
+                    ["Reaction Test", "reactin inf.html"],
+                    ["Simon", "simon_fruit.html"],
+                ],
+            },
+            {
+                name: "Guessing",
+                icon: "?",
+                desc: "A little logic, luck and deduction.",
+                links: [
+                    ["Guess The Number", "guess the num.html"],
+                    ["Hangman", "Hangman Game/index.html"],
+                    ["Guess The Word", "June Chalenge and Extras/guess the word game by a.k..html"],
+                    ["Word Scramble", "June Chalenge and Extras/word scramble By A.K..html"],
+                ],
+            },
+            {
+                name: "Quizzes",
+                icon: "◎",
+                desc: "Test what you know.",
+                links: [
+                    ["Prophet Childhood Quiz", "Prophet (S.) quiz.html"],
+                    ["Coding Quiz", "June Chalenge and Extras/Quiz By A.K..html"],
+                    ["Eid Al-Adha Quiz", "Eid Al-Adha Quiz By A.K. v 1.1.html"],
+                ],
+            },
+            {
+                name: "Pages",
+                icon: "▤",
+                desc: "A few useful pages to browse.",
+                links: [["Recipe Pages", "Recipie pages.html"]],
+            },
+        ];
+
+        const FEATURED = [
+            {
+                status: "01 / popular now",
+                title: "Neon Rush",
+                copy: "The main event. A fast, bright arcade run through a tunnel of light.",
+                cta: "Launch game",
+                href: "Car Game.html",
+            },
+            {
+                status: "02 / reflex check",
+                title: "Reaction Test",
+                copy: "One tap, one number. Find out how fast your brain really is.",
+                cta: "Try it",
+                href: "reactin inf.html",
+            },
+            {
+                status: "03 / endless stack",
+                title: "Tetris",
+                copy: "Blocks fall, lines clear, speed climbs. The classic, rebuilt in the browser.",
+                cta: "Preview",
+                href: "tetris.html",
+            },
+        ];
+
+        const TOTAL = GROUPS.reduce((n, g) => n + g.links.length, 0);
+        const url = (path) => BASE + encodeURI(path);
+
+        // State
+        let scrollY = 0;
+        let query = "";
+        let filter = "all";
+
+        // Update scroll-based visuals
+        window.addEventListener("scroll", () => {
+            scrollY = window.scrollY;
+            updateScrollProgress();
+            updateGridBg();
+            updateHeroTitle();
+        });
+
+        function updateScrollProgress() {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = max > 0 ? Math.min(1, scrollY / max) : 0;
+            document.getElementById("progressBar").style.transform = `scaleX(${progress})`;
+        }
+
+        function updateGridBg() {
+            const translateY = -(scrollY * 0.12);
+            document.getElementById("gridBg").style.transform = `translateY(${translateY}px)`;
+        }
+
+        function updateHeroTitle() {
+            const translate = Math.min(scrollY * 0.06, 70);
+            document.getElementById("heroCode").style.transform = `translateX(${translate}px)`;
+        }
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = new Intl.DateTimeFormat("en-GB", {
+                timeZone: "Asia/Qatar",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+            }).format(now);
+            const dateStr = new Intl.DateTimeFormat("en-US", {
+                timeZone: "Asia/Qatar",
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+            }).format(now);
+
+            document.getElementById("clockTime").textContent = timeStr;
+            document.getElementById("clockDate").textContent = dateStr;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Search and filter
+        const searchInput = document.getElementById("searchInput");
+        const filterNav = document.getElementById("filterNav");
+        const directoryGrid = document.getElementById("directoryGrid");
+        const resultsCount = document.getElementById("resultsCount");
+
+        // Build filter nav
+        ["all", ...GROUPS.map((g) => g.name)].forEach((name) => {
+            const btn = document.createElement("button");
+            btn.className = `filter-btn ${name === "all" ? "active" : ""}`;
+            btn.textContent = name === "all" ? "All signals" : name;
+            btn.addEventListener("click", () => {
+                filter = name;
+                document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderDirectory();
+            });
+            filterNav.appendChild(btn);
+        });
+
+        // Search and keyboard shortcuts
+        searchInput.addEventListener("input", (e) => {
+            query = e.target.value;
+            renderDirectory();
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "/" && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === "Escape") {
+                query = "";
+                searchInput.value = "";
+                searchInput.blur();
+                renderDirectory();
+            }
+        });
+
+        // Render directory
+        function renderDirectory() {
+            const term = query.trim().toLowerCase();
+            const results = GROUPS.map((group) => ({
+                ...group,
+                links: group.links.filter(
+                    ([label]) =>
+                        (!term || label.toLowerCase().includes(term)) &&
+                        (filter === "all" || group.name === filter)
+                ),
+            })).filter((group) => group.links.length > 0);
+
+            const shown = results.reduce((n, g) => n + g.links.length, 0);
+            resultsCount.textContent = shown;
+
+            directoryGrid.innerHTML = results.length === 0 ? `
+                <div class="no-results" style="grid-column: 1 / -1;">
+                    <strong>No signal found.</strong>
+                    Try a different query or clear the current filter.
+                </div>
+            ` : results.map((group, i) => `
+                <article class="directory-card reveal" style="animation-delay: ${i * 90}ms;">
+                    <div class="directory-card-header">
+                        <div style="display: flex; gap: 12px;">
+                            <div class="directory-card-icon">${group.icon}</div>
+                            <div>
+                                <h2 class="directory-card-title">${group.name}</h2>
+                                <p class="directory-card-desc">${group.desc}</p>
+                            </div>
+                        </div>
+                        <span class="directory-card-index">0${i + 1} / ${String(group.links.length).padStart(2, "0")}</span>
+                    </div>
+                    <div class="directory-card-links">
+                        ${group.links.map(([label, path]) => `
+                            <a href="${url(path)}" target="_blank" rel="noopener" class="directory-link">
+                                <span class="directory-link-label">${label}</span>
+                                <span class="directory-link-arrow">↗</span>
+                            </a>
+                        `).join("")}
+                    </div>
+                </article>
+            `).join("");
+
+            // Trigger reveal animations
+            setTimeout(() => {
+                document.querySelectorAll(".reveal").forEach((el) => {
+                    el.setAttribute("data-shown", "true");
+                });
+            }, 50);
+        }
+
+        // Build ticker
+        function buildTicker() {
+            const words = ["games", "tools", "quizzes", "experiments", "signal lab", "html · css · js"];
+            const row = [...words, ...words, ...words, ...words];
+            const html = row.map((word, i) => `
+                <span class="ticker-item">
+                    ${word}
+                    <i class="ticker-dot"></i>
+                </span>
+            `).join("");
+
+            document.getElementById("ticker1").innerHTML = html;
+            document.getElementById("ticker2").innerHTML = html;
+        }
+
+        // Build featured
+        function buildFeatured() {
+            document.getElementById("featuredGrid").innerHTML = FEATURED.map((item, i) => `
+                <div class="reveal" style="animation-delay: ${i * 110}ms;">
+                    <article class="featured-card aurora-bloom">
+                        <div class="featured-card-image">
+                            <div style="height: 208px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); color: var(--color-foreground); opacity: 0.3;">
+                                [${item.title}]
+                            </div>
+                        </div>
+                        <div class="featured-card-content">
+                            <div>
+                                <span class="featured-card-meta">${item.status}</span>
+                                <h3>${item.title}</h3>
+                                <p>${item.copy}</p>
+                            </div>
+                            <a href="${url(item.href)}" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 24px; align-self: flex-start; padding: 10px 16px; font-size: 11px;">
+                                ${item.cta} ↗
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            `).join("");
+        }
+
+        // Initialize
+        document.getElementById("totalCount").textContent = TOTAL;
+        document.getElementById("totalCountSidebar").textContent = TOTAL;
+        buildTicker();
+        buildFeatured();
+        renderDirectory();
+
+        // Trigger initial reveals
+        setTimeout(() => {
+            document.querySelectorAll(".reveal").forEach((el) => {
+                el.setAttribute("data-shown", "true");
+            });
+        }, 100);
+    </script>
+</body>
+</html>
