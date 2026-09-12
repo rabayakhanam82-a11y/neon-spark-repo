@@ -59,6 +59,12 @@
                 transparent 78%
             );
             --shadow-neon: 0 22px 80px oklch(0 0 0 / 0.5);
+            --color-background: var(--background);
+            --color-foreground: var(--foreground);
+            --color-card: var(--card);
+            --color-card-foreground: var(--card-foreground);
+            --color-border: var(--border);
+            --color-muted-foreground: var(--muted-foreground);
         }
 
         body {
@@ -201,7 +207,7 @@
             inset: 0;
             z-index: -10;
             pointer-events: none;
-            background: radial-gradient(circle at 78% 14%, color-mix(in oklab, var(--neon-pink) 16%, transparent), transparent 30%), radial-gradient(circle at 12% 62%, color-mix(in oklab, var(--neon-cyan) 12%, transparent), transparent 25%);
+            background: radial-gradient(circle at 78% 14%, color-mix(in oklab, var(--neon-pink) 16%, transparent), transparent 30%), radial-gradient(circle at 12% 62%, color-mix(in oklab, var(--neon-cyan) 12%, transparent), transparent 35%);
         }
 
         .grid-bg {
@@ -294,6 +300,21 @@
             background: var(--acid);
             box-shadow: 0 0 0 4px color-mix(in oklab, var(--acid) 14%, transparent), 0 0 12px var(--acid);
             animation: flicker 5s steps(2, end) infinite;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            margin-left: 12px;
+            color: var(--color-muted-foreground);
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--neon-cyan);
         }
 
         @media (min-width: 640px) {
@@ -937,6 +958,10 @@
         footer a:hover {
             text-shadow: 0 0 28px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
         }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -953,10 +978,13 @@
                     <div class="logo-tag">&lt;/&gt;</div>
                     <span class="header-title">HTML Creations <span style="color: var(--neon-cyan);">/ Signal Lab</span></span>
                 </a>
-                <span class="header-status">
-                    <i class="status-dot"></i>
-                    system online
-                </span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="header-status">
+                        <i class="status-dot"></i>
+                        system online
+                    </span>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+                </div>
             </div>
         </header>
 
@@ -998,8 +1026,21 @@
 
             <!-- TICKER -->
             <div class="ticker">
-                <div class="ticker-content" id="ticker1">
-                    <!-- Auto-generated -->
+                <div class="ticker-content">
+                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
+                </div>
+                <div class="ticker-content ticker-reverse">
+                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
                 </div>
             </div>
 
@@ -1016,14 +1057,26 @@
                 </div>
 
                 <div class="featured-grid" id="featuredGrid">
-                    <!-- Auto-generated -->
+                    <!-- Populated by JS -->
                 </div>
             </section>
 
-            <!-- TICKER -->
             <div class="ticker">
-                <div class="ticker-content ticker-reverse" id="ticker2">
-                    <!-- Auto-generated -->
+                <div class="ticker-content ticker-reverse">
+                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
+                </div>
+                <div class="ticker-content">
+                    <span class="ticker-item">games<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">tools<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">quizzes<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">experiments<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">signal lab<i class="ticker-dot"></i></span>
+                    <span class="ticker-item">html · css · js<i class="ticker-dot"></i></span>
                 </div>
             </div>
 
@@ -1031,31 +1084,42 @@
             <section id="directory" class="directory">
                 <div class="reveal">
                     <div class="directory-header">
-                        <label class="search-container">
+                        <div class="search-container">
                             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="11" cy="11" r="7"></circle>
                                 <path d="m20 20-4-4"></path>
                             </svg>
-                            <input type="search" id="searchInput" class="search-input" placeholder="Search the signal lab…" autocomplete="off">
+                            <input
+                                id="searchInput"
+                                type="search"
+                                placeholder="Search the signal lab…"
+                                autocomplete="off"
+                                class="search-input"
+                            />
                             <span class="search-shortcut">/</span>
-                        </label>
+                        </div>
                         <span class="results-count"><span id="resultsCount">48</span> projects</span>
                     </div>
 
                     <nav class="filter-nav" id="filterNav">
-                        <!-- Auto-generated -->
+                        <!-- Populated by JS -->
                     </nav>
                 </div>
 
                 <div class="directory-grid" id="directoryGrid">
-                    <!-- Auto-generated -->
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="no-results hidden" id="noResults">
+                    <strong>No signal found.</strong>
+                    Try a different query or clear the current filter.
                 </div>
             </section>
         </main>
 
         <footer>
             <span>HTML / CSS / JS · Signal Lab</span>
-            <a href="https://github.com/rabayakhanam82-a11y/neon-spark-repo" target="_blank" rel="noopener">Source ↗</a>
+            <a href="https://github.com/24-25ht/HTML" target="_blank" rel="noopener">Source archive ↗</a>
         </footer>
     </div>
 
@@ -1155,36 +1219,36 @@
         ];
 
         const TOTAL = GROUPS.reduce((n, g) => n + g.links.length, 0);
-        const url = (path) => BASE + encodeURI(path);
 
-        // State
-        let scrollY = 0;
-        let query = "";
-        let filter = "all";
+        // Theme Toggle
+        const themeToggle = document.getElementById("themeToggle");
+        const html = document.documentElement;
 
-        // Update scroll-based visuals
-        window.addEventListener("scroll", () => {
-            scrollY = window.scrollY;
-            updateScrollProgress();
-            updateGridBg();
-            updateHeroTitle();
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        html.style.colorScheme = savedTheme;
+        themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+
+        themeToggle.addEventListener("click", () => {
+            const current = html.style.colorScheme || "dark";
+            const newTheme = current === "dark" ? "light" : "dark";
+            html.style.colorScheme = newTheme;
+            localStorage.setItem("theme", newTheme);
+            themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
         });
 
+        // Scroll Progress
         function updateScrollProgress() {
             const max = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = max > 0 ? Math.min(1, scrollY / max) : 0;
-            document.getElementById("progressBar").style.transform = `scaleX(${progress})`;
+            const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+            document.getElementById("progressBar").style.transform = `scaleX(${p})`;
+
+            const gridBg = document.getElementById("gridBg");
+            gridBg.style.transform = `translateY(${-(window.scrollY * 0.12)}px)`;
         }
 
-        function updateGridBg() {
-            const translateY = -(scrollY * 0.12);
-            document.getElementById("gridBg").style.transform = `translateY(${translateY}px)`;
-        }
-
-        function updateHeroTitle() {
-            const translate = Math.min(scrollY * 0.06, 70);
-            document.getElementById("heroCode").style.transform = `translateX(${translate}px)`;
-        }
+        window.addEventListener("scroll", updateScrollProgress, { passive: true });
+        window.addEventListener("resize", updateScrollProgress);
+        updateScrollProgress();
 
         // Clock
         function updateClock() {
@@ -1196,6 +1260,7 @@
                 second: "2-digit",
                 hour12: false,
             }).format(now);
+
             const dateStr = new Intl.DateTimeFormat("en-US", {
                 timeZone: "Asia/Qatar",
                 weekday: "long",
@@ -1211,149 +1276,158 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // Search and filter
+        // Featured Section
+        const featuredGrid = document.getElementById("featuredGrid");
+        FEATURED.forEach((item, i) => {
+            const card = document.createElement("div");
+            card.className = "reveal featured-card";
+            card.style.transitionDelay = `${i * 110}ms`;
+            card.innerHTML = `
+                <div class="featured-card-image">
+                    <div style="height: 208px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); display: flex; align-items: center; justify-content: center; color: var(--color-background); font-weight: bold;">
+                        ${item.title}
+                    </div>
+                </div>
+                <div class="featured-card-content">
+                    <div>
+                        <span class="featured-card-meta">${item.status}</span>
+                        <h3>${item.title}</h3>
+                        <p>${item.copy}</p>
+                    </div>
+                    <a href="${BASE}${encodeURI(item.href)}" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 24px; align-self: flex-start;">
+                        ${item.cta} ↗
+                    </a>
+                </div>
+            `;
+            featuredGrid.appendChild(card);
+        });
+
+        // Directory & Search
         const searchInput = document.getElementById("searchInput");
         const filterNav = document.getElementById("filterNav");
         const directoryGrid = document.getElementById("directoryGrid");
+        const noResults = document.getElementById("noResults");
         const resultsCount = document.getElementById("resultsCount");
 
-        // Build filter nav
-        ["all", ...GROUPS.map((g) => g.name)].forEach((name) => {
-            const btn = document.createElement("button");
-            btn.className = `filter-btn ${name === "all" ? "active" : ""}`;
-            btn.textContent = name === "all" ? "All signals" : name;
-            btn.addEventListener("click", () => {
-                filter = name;
-                document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
-                btn.classList.add("active");
-                renderDirectory();
+        let currentFilter = "all";
+        let currentQuery = "";
+
+        function renderFilters() {
+            filterNav.innerHTML = "";
+            const filters = ["all", ...GROUPS.map((g) => g.name)];
+            filters.forEach((name) => {
+                const btn = document.createElement("button");
+                btn.className = `filter-btn ${name === "all" ? "active" : ""}`;
+                btn.textContent = name === "all" ? "All signals" : name;
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    currentFilter = name;
+                    renderDirectory();
+                });
+                filterNav.appendChild(btn);
             });
-            filterNav.appendChild(btn);
-        });
+        }
 
-        // Search and keyboard shortcuts
-        searchInput.addEventListener("input", (e) => {
-            query = e.target.value;
-            renderDirectory();
-        });
-
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "/" && document.activeElement !== searchInput) {
-                e.preventDefault();
-                searchInput.focus();
-            }
-            if (e.key === "Escape") {
-                query = "";
-                searchInput.value = "";
-                searchInput.blur();
-                renderDirectory();
-            }
-        });
-
-        // Render directory
         function renderDirectory() {
-            const term = query.trim().toLowerCase();
+            const term = currentQuery.trim().toLowerCase();
             const results = GROUPS.map((group) => ({
                 ...group,
                 links: group.links.filter(
                     ([label]) =>
                         (!term || label.toLowerCase().includes(term)) &&
-                        (filter === "all" || group.name === filter)
+                        (currentFilter === "all" || group.name === currentFilter)
                 ),
             })).filter((group) => group.links.length > 0);
 
+            directoryGrid.innerHTML = "";
             const shown = results.reduce((n, g) => n + g.links.length, 0);
             resultsCount.textContent = shown;
+            noResults.classList.toggle("hidden", shown > 0);
 
-            directoryGrid.innerHTML = results.length === 0 ? `
-                <div class="no-results" style="grid-column: 1 / -1;">
-                    <strong>No signal found.</strong>
-                    Try a different query or clear the current filter.
-                </div>
-            ` : results.map((group, i) => `
-                <article class="directory-card reveal" style="animation-delay: ${i * 90}ms;">
+            results.forEach((group, index) => {
+                const card = document.createElement("article");
+                card.className = "reveal directory-card";
+                card.style.transitionDelay = `${index * 90}ms`;
+                card.innerHTML = `
                     <div class="directory-card-header">
-                        <div style="display: flex; gap: 12px;">
-                            <div class="directory-card-icon">${group.icon}</div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <span class="directory-card-icon">${group.icon}</span>
                             <div>
                                 <h2 class="directory-card-title">${group.name}</h2>
                                 <p class="directory-card-desc">${group.desc}</p>
                             </div>
                         </div>
-                        <span class="directory-card-index">0${i + 1} / ${String(group.links.length).padStart(2, "0")}</span>
+                        <span class="directory-card-index">0${index + 1} / ${String(group.links.length).padStart(2, "0")}</span>
                     </div>
                     <div class="directory-card-links">
                         ${group.links.map(([label, path]) => `
-                            <a href="${url(path)}" target="_blank" rel="noopener" class="directory-link">
+                            <a href="${BASE}${encodeURI(path)}" target="_blank" rel="noopener" class="directory-link">
                                 <span class="directory-link-label">${label}</span>
                                 <span class="directory-link-arrow">↗</span>
                             </a>
                         `).join("")}
                     </div>
-                </article>
-            `).join("");
+                `;
+                directoryGrid.appendChild(card);
+            });
 
-            // Trigger reveal animations
+            // Trigger reveals
             setTimeout(() => {
-                document.querySelectorAll(".reveal").forEach((el) => {
-                    el.setAttribute("data-shown", "true");
+                document.querySelectorAll(".reveal[data-shown]").forEach((el) => {
+                    if (el.dataset.shown === "false") {
+                        el.dataset.shown = "true";
+                    }
                 });
-            }, 50);
+            }, 10);
         }
 
-        // Build ticker
-        function buildTicker() {
-            const words = ["games", "tools", "quizzes", "experiments", "signal lab", "html · css · js"];
-            const row = [...words, ...words, ...words, ...words];
-            const html = row.map((word, i) => `
-                <span class="ticker-item">
-                    ${word}
-                    <i class="ticker-dot"></i>
-                </span>
-            `).join("");
+        searchInput.addEventListener("input", (e) => {
+            currentQuery = e.target.value;
+            renderDirectory();
+        });
 
-            document.getElementById("ticker1").innerHTML = html;
-            document.getElementById("ticker2").innerHTML = html;
-        }
+        // Keyboard shortcuts
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "/" && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.key === "Escape") {
+                searchInput.value = "";
+                currentQuery = "";
+                searchInput.blur();
+                renderDirectory();
+            }
+        });
 
-        // Build featured
-        function buildFeatured() {
-            document.getElementById("featuredGrid").innerHTML = FEATURED.map((item, i) => `
-                <div class="reveal" style="animation-delay: ${i * 110}ms;">
-                    <article class="featured-card aurora-bloom">
-                        <div class="featured-card-image">
-                            <div style="height: 208px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); color: var(--color-foreground); opacity: 0.3;">
-                                [${item.title}]
-                            </div>
-                        </div>
-                        <div class="featured-card-content">
-                            <div>
-                                <span class="featured-card-meta">${item.status}</span>
-                                <h3>${item.title}</h3>
-                                <p>${item.copy}</p>
-                            </div>
-                            <a href="${url(item.href)}" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 24px; align-self: flex-start; padding: 10px 16px; font-size: 11px;">
-                                ${item.cta} ↗
-                            </a>
-                        </div>
-                    </article>
-                </div>
-            `).join("");
+        // Intersection Observer for reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.dataset.shown = "true";
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: "-8% 0px -12% 0px" });
+
+        function observeReveals() {
+            document.querySelectorAll(".reveal").forEach((el) => {
+                observer.observe(el);
+            });
         }
 
         // Initialize
         document.getElementById("totalCount").textContent = TOTAL;
-        document.getElementById("totalCountSidebar").textContent = TOTAL;
-        buildTicker();
-        buildFeatured();
+        document.getElementById("totalCountSidebar").textContent = String(TOTAL).padStart(3, "0");
+        renderFilters();
         renderDirectory();
+        observeReveals();
 
-        // Trigger initial reveals
-        setTimeout(() => {
-            document.querySelectorAll(".reveal").forEach((el) => {
-                el.setAttribute("data-shown", "true");
-            });
-        }, 100);
+        // Re-observe after directory updates
+        new MutationObserver(() => {
+            observeReveals();
+        }).observe(directoryGrid, { childList: true });
     </script>
 </body>
 </html>
