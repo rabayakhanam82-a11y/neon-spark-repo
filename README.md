@@ -2,7 +2,9 @@
 
 A modern, animated web experience built with cutting-edge technologies. This project features a stunning dark neon theme with smooth scroll-based animations and energetic movement.
 
-**📍 View the live demo:** [Neon Spark GitHub Pages](https://24-25ht.github.io/HTML/)
+**⭐️📍 View the new live demo:** [Neon Spark GitHub Pages](https://rabayakhanam82-a11y.github.io/neon-spark-repo/)
+
+**📍 View the OG live demo:** [Abdullah Karim HTML GitHub Pages](https://24-25ht.github.io/HTML/)
 
 **📚 Reference repository:** [24-25ht/HTML](https://github.com/24-25ht/HTML)
 
